@@ -3,6 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
 #include "Game.h"
+#include "StateManager.h"
 
 
 #define SCREEN_X 0
@@ -14,11 +15,10 @@
 #define INIT_MIRROR_PLAYER_Y_TILES 15
 
 
-Scene::Scene()
+Scene::Scene(CStateManager* pManager) 
+	: CGameState(pManager)
 {
-	map = NULL;
-	player = NULL;
-	mirrorPlayer = NULL;
+	init();
 }
 
 Scene::~Scene()
@@ -29,6 +29,12 @@ Scene::~Scene()
 		delete player;
 	if (mirrorPlayer != NULL)
 		delete mirrorPlayer;
+}
+
+Scene* Scene::GetInstance(CStateManager* pManager)
+{
+	static Scene Instance(pManager);
+	return &Instance;
 }
 
 
@@ -50,14 +56,14 @@ void Scene::init()
 	currentTime = 0.0f;
 }
 
-void Scene::update(int deltaTime)
+void Scene::Update(DWORD deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
 	mirrorPlayer->update(deltaTime);
 }
 
-void Scene::render()
+void Scene::Draw()
 {
 	glm::mat4 modelview;
 

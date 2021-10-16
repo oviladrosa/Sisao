@@ -7,21 +7,25 @@
 #include "TileMap.h"
 #include "Player.h"
 
+#include "GameState.h"
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
 
 
-class Scene
+class Scene : public CGameState
 {
 
 public:
-	Scene();
+	static Scene* GetInstance(CStateManager* pManager);
 	~Scene();
 
 	void init();
-	void update(int deltaTime);
-	void render();
+	void Update(DWORD deltaTime);
+	void Draw();
+
+protected:
+	Scene(CStateManager* pManager);
 
 private:
 	void initShaders();
