@@ -34,7 +34,9 @@ private:
 	TileMap *map;
 	Player *player;
 	Player* mirrorPlayer;
+	Texture bgText;
 	ShaderProgram texProgram;
+	Sprite* background;
 	float currentTime;
 	glm::mat4 projection;
 

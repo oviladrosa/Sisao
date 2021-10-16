@@ -1,7 +1,6 @@
 #ifndef _GAME_INCLUDE
 #define _GAME_INCLUDE
 
-
 #include "Scene.h"
 #include "MenuState.h"
 #include "StateManager.h"

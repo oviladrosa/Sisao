@@ -31,7 +31,7 @@ Sprite::Sprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Te
 	texture = spritesheet;
 	shaderProgram = program;
 	currentAnimation = -1;
-	position = glm::vec2(0.f);
+	pos = glm::vec2(0.f);
 }
 
 void Sprite::update(int deltaTime)
@@ -50,7 +50,7 @@ void Sprite::update(int deltaTime)
 
 void Sprite::render() const
 {
-	glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(position.x, position.y, 0.f));
+	glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(pos.x, pos.y, 0.f));
 	shaderProgram->setUniformMatrix4f("modelview", modelview);
 	shaderProgram->setUniform2f("texCoordDispl", texCoordDispl.x, texCoordDispl.y);
 	glEnable(GL_TEXTURE_2D);
@@ -101,9 +101,19 @@ int Sprite::animation() const
 	return currentAnimation;
 }
 
-void Sprite::setPosition(const glm::vec2 &pos)
+void Sprite::setPosition(const glm::vec2 &newPos)
 {
-	position = pos;
+	pos = newPos;
+}
+
+glm::vec2 Sprite::position() const
+{
+	return pos;
+}
+
+glm::vec2 &Sprite::position()
+{
+	return pos;
 }
 
 

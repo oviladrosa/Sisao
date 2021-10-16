@@ -18,11 +18,17 @@
 Scene::Scene(CStateManager* pManager) 
 	: CGameState(pManager)
 {
+	map = NULL;
+	player = NULL;
+	mirrorPlayer = NULL;
+	background = NULL;
 	init();
 }
 
 Scene::~Scene()
 {
+	if (background != NULL)
+		delete background;
 	if(map != NULL)
 		delete map;
 	if(player != NULL)
@@ -41,6 +47,14 @@ Scene* Scene::GetInstance(CStateManager* pManager)
 void Scene::init()
 {
 	initShaders();
+	bgText.loadFromFile("images/Background.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	bgText.setMinFilter(GL_NEAREST);
+	bgText.setMagFilter(GL_NEAREST);
+	float xScale = 1.f - (bgText.width() / 1920.f);
+	float yScale = 1.f - (bgText.height() / 1080.f);
+	background = Sprite::createSprite(glm::vec2(1920.f, 1080.f), glm::vec2(1.f + xScale, 1.f + yScale),
+		&bgText, &texProgram);
+	background->setPosition(background->position());
 	map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	// initialization upper Player
 	player = new Player();
@@ -66,13 +80,13 @@ void Scene::Update(DWORD deltaTime)
 void Scene::Draw()
 {
 	glm::mat4 modelview;
-
 	texProgram.use();
 	texProgram.setUniformMatrix4f("projection", projection);
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	modelview = glm::mat4(1.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+	background->render();
 	map->render();
 	player->render();
 	mirrorPlayer->render();
