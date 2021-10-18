@@ -75,6 +75,9 @@ void Scene::Update(DWORD deltaTime)
 	currentTime += deltaTime;
 	player->update(deltaTime);
 	mirrorPlayer->update(deltaTime);
+	if (Game::instance().getKey(27)) {
+		ChangeState(CMenuState::GetInstance(m_pStateManager));
+	}
 }
 
 void Scene::Draw()

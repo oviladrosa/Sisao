@@ -3,11 +3,12 @@
 TextBlock::TextBlock(float x, float y, float height, float width, ShaderProgram &program) {
 	this->width = width;
 	this->height = height;
+	this->x = x;
+	this->y = y;
 	text = "";
 	color = glm::vec3(120.f, 0.f, 0.f);
 	position = glm::vec2(250.f, 250.f);
 	float vertices[12] = { x, y, x + width, y, x + width, y + height, x, y, x + width, y + height, x, y + height };
-
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 	glGenBuffers(1, &vbo);

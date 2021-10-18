@@ -26,6 +26,7 @@ void Game::render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	m_pStateManager->Draw();
 }
+
 void Game::keyPressed(int key)
 {
 	//if(key == 27) // Escape code

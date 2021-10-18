@@ -41,9 +41,13 @@ private:
 	Scene* m_pCurrentGame;
 	ShaderProgram texProgram;
 	TextBlock *newBlock;
+	Text newText;
 	TextBlock *restartBlock;
+	Text restartText;
 	TextBlock *optionsBlock;
+	Text optionsText;
 	TextBlock *exitBlock;
+	Text exitText;
 	glm::mat4 projection;
 	vector<TextBlock> opt;
 	bool up;

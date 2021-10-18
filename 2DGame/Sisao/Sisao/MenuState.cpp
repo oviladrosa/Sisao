@@ -27,6 +27,23 @@ CMenuState::CMenuState(CStateManager* pManager)
 
 	this->exitBlock = new TextBlock(350.f, 390.f, 60.f, 240.f, texProgram);
 	opt.push_back(*exitBlock);
+
+	if (!newText.init("fonts/Tourney-BoldItalic.ttf"))
+		//if(!text.init("fonts/OpenSans-Bold.ttf"))
+		//if(!text.init("fonts/DroidSerif.ttf"))
+		cout << "Could not load font!!!" << endl;
+	if (!restartText.init("fonts/Tourney-BoldItalic.ttf"))
+		//if(!text.init("fonts/OpenSans-Bold.ttf"))
+		//if(!text.init("fonts/DroidSerif.ttf"))
+		cout << "Could not load font!!!" << endl;
+	if (!optionsText.init("fonts/Tourney-BoldItalic.ttf"))
+		//if(!text.init("fonts/OpenSans-Bold.ttf"))
+		//if(!text.init("fonts/DroidSerif.ttf"))
+		cout << "Could not load font!!!" << endl;
+	if (!exitText.init("fonts/Tourney-BoldItalic.ttf"))
+		//if(!text.init("fonts/OpenSans-Bold.ttf"))
+		//if(!text.init("fonts/DroidSerif.ttf"))
+		cout << "Could not load font!!!" << endl;
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1) / 2.f, float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
 	m_iCurrentSelection = 0;
 	up = false;
@@ -63,6 +80,17 @@ void CMenuState::Update(DWORD deltaTime) {
 	else if(!Game::instance().getSpecialKey(GLUT_KEY_DOWN) ){
 		down = false;
 	}
+	if (Game::instance().getKey(13)) {
+		switch (m_iCurrentSelection) {
+			case 0:
+				if (!m_pCurrentGame)
+					m_pCurrentGame = Scene::GetInstance(m_pStateManager);
+				//m_pCurrentGame->Reset();
+				ChangeState(m_pCurrentGame);
+				break;
+		}
+		
+	}
 }
 
 void CMenuState::Draw()
@@ -79,10 +107,15 @@ void CMenuState::Draw()
 			opt[i].Draw();
 		}
 		else {
-			texProgram.setUniform4f("color", 0.5f, 0.5, 1.f, 1.0f);
+			texProgram.setUniform4f("color", 0.53f, 0.83f, 0.f, 1.f);
 			opt[i].Draw();
 		}
 	}
+	newText.render("Start", glm::vec2(880.f, 350.f), 32, glm::vec4(0.f, 0.f, 0.f, 1.f));
+	restartText.render("Continue", glm::vec2(850.f, 500.f), 32, glm::vec4(0.f, 0.f, 0.f, 1.f));
+	optionsText.render("Options", glm::vec2(860.f, 650.f), 32, glm::vec4(0.f, 0.f, 0.f, 1.f));
+	exitText.render("Exit", glm::vec2(900.f, 800.f), 32, glm::vec4(0.f, 0.f, 0.f, 1.f));
+
 }
 
 void CMenuState::EnterState()

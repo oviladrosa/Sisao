@@ -5,6 +5,7 @@
 #include <iostream>
 #include <glm/glm.hpp>
 #include "ShaderProgram.h"
+#include "Text.h"
 
 class TextBlock {
 public:
@@ -20,6 +21,8 @@ public:
 private:
 	float width;
 	float height;
+	float x;
+	float y;
 	std::string text;
 	glm::vec3 color;
 	glm::vec2 position;
