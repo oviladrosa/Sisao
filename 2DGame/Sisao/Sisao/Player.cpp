@@ -7,7 +7,7 @@
 
 
 #define JUMP_ANGLE_STEP 4
-#define JUMP_HEIGHT 96
+#define JUMP_HEIGHT 36
 #define FALL_STEP 4
 #define INITIAL_POSITION
 
@@ -97,6 +97,10 @@ void Player::update(int deltaTime)
 	{
 		if (!this->mirror) {
 			jumpAngle += JUMP_ANGLE_STEP;
+			if (map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y)) 
+			{
+				jumpAngle = 180;
+			}
 			if (jumpAngle == 180)
 			{
 				bJumping = false;
@@ -104,13 +108,17 @@ void Player::update(int deltaTime)
 			}
 			else
 			{
-				posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
+				posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
 				if (jumpAngle > 90)
 					bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
 			}
 		}
 		else {
 			jumpAngle += JUMP_ANGLE_STEP;
+			if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y))
+			{
+				jumpAngle = 180;
+			}
 			if (jumpAngle == 180)
 			{
 				bJumping = false;
@@ -118,8 +126,8 @@ void Player::update(int deltaTime)
 			}
 			else
 			{
-				posPlayer.y = int(startY + 96 * sin(3.14159f * jumpAngle / 180.f));
-				if (jumpAngle < -90)
+				posPlayer.y = int(startY + JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
+				if (jumpAngle > 90)
 					bJumping = !map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
 			}
 		}
