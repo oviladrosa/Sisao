@@ -39,7 +39,8 @@ private:
 	Sprite* background;
 	float currentTime;
 	glm::mat4 projection;
-
+	Texture rpText;
+	Sprite* radiopool;
 };
 
 

@@ -24,6 +24,7 @@ public:
 
 	void update(int deltaTime);
 	void render() const;
+	void renderTransparent() const;
 	void free();
 
 	void setNumberAnimations(int nAnimations);
