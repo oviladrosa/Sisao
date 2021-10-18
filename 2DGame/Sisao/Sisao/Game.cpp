@@ -9,7 +9,8 @@ void Game::init()
 	bPlay = true;
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	m_pStateManager = new CStateManager;
-	m_pStateManager->ChangeState(CMenuState::GetInstance(m_pStateManager));
+	//CMenuState::GetInstance...
+	m_pStateManager->ChangeState(Scene::GetInstance(m_pStateManager));
 }
 
 
