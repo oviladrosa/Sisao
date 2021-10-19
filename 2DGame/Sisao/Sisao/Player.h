@@ -31,7 +31,7 @@ private:
 	Sprite *sprite;
 	TileMap *map;
 	bool mirror;
-
+	int lastMove;
 };
 
 
