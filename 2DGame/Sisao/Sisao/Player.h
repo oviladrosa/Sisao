@@ -17,7 +17,8 @@ public:
 	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, bool mirror);
 	void update(int deltaTime);
 	void render();
-	
+	bool isDead();
+
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
 	
@@ -30,7 +31,7 @@ private:
 	Sprite *sprite;
 	TileMap *map;
 	bool mirror;
-
+	int lastMove;
 };
 
 

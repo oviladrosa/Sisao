@@ -44,6 +44,10 @@ CMenuState::CMenuState(CStateManager* pManager)
 		//if(!text.init("fonts/OpenSans-Bold.ttf"))
 		//if(!text.init("fonts/DroidSerif.ttf"))
 		cout << "Could not load font!!!" << endl;
+	if (!title.init("fonts/Tourney-BoldItalic.ttf"))
+		//if(!text.init("fonts/OpenSans-Bold.ttf"))
+		//if(!text.init("fonts/DroidSerif.ttf"))
+		cout << "Could not load font!!!" << endl;
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1) / 2.f, float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
 	m_iCurrentSelection = 0;
 	up = false;
@@ -85,8 +89,13 @@ void CMenuState::Update(DWORD deltaTime) {
 			case 0:
 				if (!m_pCurrentGame)
 					m_pCurrentGame = Scene::GetInstance(m_pStateManager);
-				//m_pCurrentGame->Reset();
+				m_pCurrentGame->Reset();
 				ChangeState(m_pCurrentGame);
+				break;
+			case 1:
+				if (m_pCurrentGame) {
+					ChangeState(m_pCurrentGame);
+				}
 				break;
 		}
 		
@@ -104,10 +113,12 @@ void CMenuState::Draw()
 	for (int i = 0; i < opt.size(); i++) {
 		if (i == m_iCurrentSelection) {
 			texProgram.setUniform4f("color", 0.5f, 0.5, 0.5f, 1.0f);
+			texProgram.setUniform4f("arrow_color", 0.f, 0.f, 0.f, 1.0f);
 			opt[i].Draw();
 		}
 		else {
 			texProgram.setUniform4f("color", 0.53f, 0.83f, 0.f, 1.f);
+			texProgram.setUniform4f("arrow_color", 0.53f, 0.83f, 0.f, 1.0f);
 			opt[i].Draw();
 		}
 	}
@@ -115,7 +126,7 @@ void CMenuState::Draw()
 	restartText.render("Continue", glm::vec2(850.f, 500.f), 32, glm::vec4(0.f, 0.f, 0.f, 1.f));
 	optionsText.render("Options", glm::vec2(860.f, 650.f), 32, glm::vec4(0.f, 0.f, 0.f, 1.f));
 	exitText.render("Exit", glm::vec2(900.f, 800.f), 32, glm::vec4(0.f, 0.f, 0.f, 1.f));
-
+	title.render("SISAO", glm::vec2(740.f, 190.f), 128, glm::vec4(0.53f, 0.83f, 0.f, 1.f));
 }
 
 void CMenuState::EnterState()

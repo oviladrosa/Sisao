@@ -50,6 +50,7 @@ private:
 	Text exitText;
 	glm::mat4 projection;
 	vector<TextBlock> opt;
+	Text title;
 	bool up;
 	bool down;
 

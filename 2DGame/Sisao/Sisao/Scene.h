@@ -24,6 +24,7 @@ public:
 	void init();
 	void Update(DWORD deltaTime);
 	void Draw();
+	void Reset();
 
 protected:
 	Scene(CStateManager* pManager);
@@ -42,7 +43,8 @@ private:
 	Sprite* background;
 	float currentTime;
 	glm::mat4 projection;
-
+	Texture rpText;
+	Sprite* radiopool;
 };
 
 

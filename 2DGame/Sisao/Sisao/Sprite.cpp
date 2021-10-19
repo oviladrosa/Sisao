@@ -62,6 +62,25 @@ void Sprite::render() const
 	glDisable(GL_TEXTURE_2D);
 }
 
+void Sprite::renderTransparent() const {
+	glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(pos.x, pos.y, 0.f));
+	shaderProgram->setUniformMatrix4f("modelview", modelview);
+	shaderProgram->setUniform2f("texCoordDispl", texCoordDispl.x, texCoordDispl.y);
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_DST_COLOR, GL_ONE);
+	texture->use();
+	glBindVertexArray(vao);
+	glEnableVertexAttribArray(posLocation);
+	glEnableVertexAttribArray(texCoordLocation);
+	
+
+	
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_BLEND);
+}
+
 void Sprite::free()
 {
 	glDeleteBuffers(1, &vbo);

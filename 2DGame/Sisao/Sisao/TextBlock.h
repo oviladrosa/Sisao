@@ -23,6 +23,7 @@ private:
 	float height;
 	float x;
 	float y;
+	int totalVertices;
 	std::string text;
 	glm::vec3 color;
 	glm::vec2 position;

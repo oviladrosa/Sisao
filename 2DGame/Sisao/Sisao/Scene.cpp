@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
-#include "Scene.h"
+#include "Scene.h" 
 #include "Game.h"
 #include "StateManager.h"
 
@@ -57,6 +57,7 @@ Scene* Scene::GetInstance(CStateManager* pManager)
 void Scene::init()
 {
 	initShaders();
+	//Background initialization
 	bgText.loadFromFile("images/Background.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bgText.setMinFilter(GL_NEAREST);
 	bgText.setMagFilter(GL_NEAREST);
@@ -65,6 +66,14 @@ void Scene::init()
 	background = Sprite::createSprite(glm::vec2(1920.f, 1080.f), glm::vec2(1.f + xScale, 1.f + yScale),
 		&bgText, &texProgram);
 	background->setPosition(background->position());
+
+	//Radioactive pool initialization
+	rpText.loadFromFile("images/radioactive_pool.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	rpText.setMinFilter(GL_NEAREST);
+	rpText.setMagFilter(GL_NEAREST);
+	radiopool = Sprite::createSprite(glm::vec2(2048.f, 512.f), glm::vec2(1.f, 1.f), &rpText, &texProgram);
+	radiopool->setPosition(glm::vec2(0.f, 200.f));
+
 	map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	// initialization upper Player
 	player = new Player();
@@ -101,6 +110,7 @@ void Scene::Update(DWORD deltaTime)
 	if (Game::instance().getKey(27)) {
 		ChangeState(CMenuState::GetInstance(m_pStateManager));
 	}
+	if (player->isDead() || mirrorPlayer->isDead()) Reset();
 }
 
 void Scene::Draw()
@@ -112,12 +122,21 @@ void Scene::Draw()
 	modelview = glm::mat4(1.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
-	background->render();
+	background->renderTransparent();
+	
 	map->render();
+	
 	player->render();
 	mirrorPlayer->render();
 	card1->render();
 	card2->render();
+	radiopool->renderTransparent();
+	
+}
+
+void Scene::Reset() {
+	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+	mirrorPlayer->setPosition(glm::vec2(INIT_MIRROR_PLAYER_X_TILES * map->getTileSize(), INIT_MIRROR_PLAYER_Y_TILES * map->getTileSize()));
 }
 
 void Scene::initShaders()
