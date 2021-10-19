@@ -87,6 +87,7 @@ void Scene::Update(DWORD deltaTime)
 	if (Game::instance().getKey(27)) {
 		ChangeState(CMenuState::GetInstance(m_pStateManager));
 	}
+	if (player->isDead() || mirrorPlayer->isDead()) Reset();
 }
 
 void Scene::Draw()
@@ -106,6 +107,11 @@ void Scene::Draw()
 	mirrorPlayer->render();
 	radiopool->renderTransparent();
 	
+}
+
+void Scene::Reset() {
+	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+	mirrorPlayer->setPosition(glm::vec2(INIT_MIRROR_PLAYER_X_TILES * map->getTileSize(), INIT_MIRROR_PLAYER_Y_TILES * map->getTileSize()));
 }
 
 void Scene::initShaders()

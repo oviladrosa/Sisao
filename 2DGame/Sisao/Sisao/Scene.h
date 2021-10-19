@@ -23,6 +23,7 @@ public:
 	void init();
 	void Update(DWORD deltaTime);
 	void Draw();
+	void Reset();
 
 protected:
 	Scene(CStateManager* pManager);

@@ -5,15 +5,20 @@ TextBlock::TextBlock(float x, float y, float height, float width, ShaderProgram 
 	this->height = height;
 	this->x = x;
 	this->y = y;
+
 	text = "";
 	color = glm::vec3(120.f, 0.f, 0.f);
 	position = glm::vec2(250.f, 250.f);
-	float vertices[12] = { x, y, x + width, y, x + width, y + height, x, y, x + width, y + height, x, y + height };
+
+	
+	float vertices[24] = { x, y, x + width, y, x + width, y + height, x, y, x + width, y + height, x, y + height ,
+						x,y,x-height/2,y+height/2,x,y+height, x+width,y,x + width + height / 2,y + height / 2,x + width,y + height };
+
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 24 * sizeof(float), vertices, GL_STATIC_DRAW);
 	posLocation = program.bindVertexAttribute("position", 2, 2* sizeof(float), 0);
 }
 
@@ -41,5 +46,5 @@ void TextBlock::SetPosition(glm::vec2 pos) {
 void TextBlock::Draw() {
 	glBindVertexArray(vao);
 	glEnableVertexAttribArray(posLocation);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDrawArrays(GL_TRIANGLES, 0, 12);
 }
