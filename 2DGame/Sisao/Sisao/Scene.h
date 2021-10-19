@@ -6,6 +6,7 @@
 #include "ShaderProgram.h"
 #include "TileMap.h"
 #include "Player.h"
+#include "Card.h"
 
 #include "GameState.h"
 
@@ -35,6 +36,8 @@ private:
 	TileMap *map;
 	Player *player;
 	Player* mirrorPlayer;
+	Card* card1;
+	Card* card2;
 	Texture bgText;
 	ShaderProgram texProgram;
 	Sprite* background;

@@ -13,6 +13,10 @@
 #define INIT_PLAYER_Y_TILES 4
 #define INIT_MIRROR_PLAYER_X_TILES 6
 #define INIT_MIRROR_PLAYER_Y_TILES 15
+#define INIT_CARD1_X_TILES 6
+#define INIT_CARD1_Y_TILES 2
+#define INIT_CARD2_X_TILES 6
+#define INIT_CARD2_Y_TILES 15
 
 
 Scene::Scene(CStateManager* pManager) 
@@ -22,6 +26,8 @@ Scene::Scene(CStateManager* pManager)
 	player = NULL;
 	mirrorPlayer = NULL;
 	background = NULL;
+	card1 = NULL;
+	card2 = NULL;
 	init();
 }
 
@@ -29,12 +35,16 @@ Scene::~Scene()
 {
 	if (background != NULL)
 		delete background;
-	if(map != NULL)
+	if (map != NULL)
 		delete map;
-	if(player != NULL)
+	if (player != NULL)
 		delete player;
 	if (mirrorPlayer != NULL)
 		delete mirrorPlayer;
+	if (card1 != NULL)
+		delete card1;
+	if (card2 != NULL)
+		delete card2;
 }
 
 Scene* Scene::GetInstance(CStateManager* pManager)
@@ -75,6 +85,17 @@ void Scene::init()
 	mirrorPlayer->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, true);
 	mirrorPlayer->setPosition(glm::vec2(INIT_MIRROR_PLAYER_X_TILES * map->getTileSize(), INIT_MIRROR_PLAYER_Y_TILES * map->getTileSize()));
 	mirrorPlayer->setTileMap(map);
+	//initialization card 1
+	card1 = new Card();
+	card1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	card1->setPosition(glm::vec2(glm::vec2(INIT_CARD1_X_TILES * map->getTileSize(), INIT_CARD1_Y_TILES * map->getTileSize())));
+	card1->setTileMap(map);
+	//initialization card 2
+	card2 = new Card();
+	card2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	card2->setPosition(glm::vec2(glm::vec2(INIT_CARD2_X_TILES * map->getTileSize(), INIT_CARD2_Y_TILES * map->getTileSize())));
+	card2->setTileMap(map);
+
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1)/2.f, float(SCREEN_HEIGHT - 1)/2.f, 0.f);
 	currentTime = 0.0f;
 }
@@ -84,6 +105,8 @@ void Scene::Update(DWORD deltaTime)
 	currentTime += deltaTime;
 	player->update(deltaTime);
 	mirrorPlayer->update(deltaTime);
+	card1->update(deltaTime);
+	card2->update(deltaTime);
 	if (Game::instance().getKey(27)) {
 		ChangeState(CMenuState::GetInstance(m_pStateManager));
 	}
@@ -105,6 +128,8 @@ void Scene::Draw()
 	
 	player->render();
 	mirrorPlayer->render();
+	card1->render();
+	card2->render();
 	radiopool->renderTransparent();
 	
 }
