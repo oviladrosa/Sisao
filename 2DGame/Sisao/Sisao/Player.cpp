@@ -38,13 +38,13 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, bo
 		sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.0f, 0.f));
 
 		
-		sprite->setAnimationSpeed(MOVE_LEFT, 4);
+		sprite->setAnimationSpeed(MOVE_LEFT,16);
 		sprite->addKeyframe(MOVE_LEFT, glm::vec2(rx * 31.f, 0.5f));
 		sprite->addKeyframe(MOVE_LEFT, glm::vec2(rx * 30.f, 0.5f));
 		sprite->addKeyframe(MOVE_LEFT, glm::vec2(rx * 29.f, 0.5f));
 
 		
-		sprite->setAnimationSpeed(MOVE_RIGHT, 4);
+		sprite->setAnimationSpeed(MOVE_RIGHT, 16);
 		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(rx * 4.f, 0.f));
 		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(rx * 5.f, 0.f));
 		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(rx * 6.f, 0.f));
@@ -326,6 +326,10 @@ bool Player::isDead() {
 	else {
 		return posPlayer.y < 270;
 	}
+}
+
+glm::ivec2 Player::getPosition() {
+	return posPlayer;
 }
 
 

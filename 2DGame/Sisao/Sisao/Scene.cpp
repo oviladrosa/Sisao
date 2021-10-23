@@ -9,9 +9,9 @@
 #define SCREEN_X 0
 #define SCREEN_Y 0
 
-#define INIT_PLAYER_X_TILES 4
+#define INIT_PLAYER_X_TILES 30
 #define INIT_PLAYER_Y_TILES 4
-#define INIT_MIRROR_PLAYER_X_TILES 6
+#define INIT_MIRROR_PLAYER_X_TILES 30
 #define INIT_MIRROR_PLAYER_Y_TILES 15
 #define INIT_CARD1_X_TILES 6
 #define INIT_CARD1_Y_TILES 2
@@ -96,7 +96,8 @@ void Scene::init()
 	card2->setPosition(glm::vec2(glm::vec2(INIT_CARD2_X_TILES * map->getTileSize(), INIT_CARD2_Y_TILES * map->getTileSize())));
 	card2->setTileMap(map);
 
-	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1)/2.f, float(SCREEN_HEIGHT - 1)/2.f, 0.f);
+	float half_point = (INIT_PLAYER_X_TILES + INIT_MIRROR_PLAYER_X_TILES) / 2.0;
+	projection = glm::ortho((half_point*32.f)-SCREEN_WIDTH/4.f, (half_point * 32.f) + SCREEN_WIDTH / 4.f, float(SCREEN_HEIGHT - 1)/2.f, 0.f);
 	currentTime = 0.0f;
 }
 
@@ -107,6 +108,8 @@ void Scene::Update(DWORD deltaTime)
 	mirrorPlayer->update(deltaTime);
 	card1->update(deltaTime);
 	card2->update(deltaTime);
+	float half_point = (player->getPosition()[0] + mirrorPlayer->getPosition()[0])/2.f;
+	projection = glm::ortho((half_point) - SCREEN_WIDTH / 4.f, (half_point) + SCREEN_WIDTH / 4.f, float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
 	if (Game::instance().getKey(27)) {
 		ChangeState(CMenuState::GetInstance(m_pStateManager));
 	}
