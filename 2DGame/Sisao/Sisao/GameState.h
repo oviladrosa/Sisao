@@ -4,6 +4,7 @@
 #include <Windows.h>
 
 class CStateManager;
+class CSceneManager;
 
 // Base class for the different states
 // of the game.
@@ -12,6 +13,8 @@ class CGameState
 public:
 	// Constructor
 	CGameState(CStateManager* pManager);
+	CGameState(CSceneManager* sManager);
+
 	// Destructor
 	virtual ~CGameState();
 
@@ -32,6 +35,7 @@ protected:
 
 	// The state manager.
 	CStateManager* m_pStateManager;
+	CSceneManager* m_pSceneManager;
 };
 
 #endif  // _GAMESTATE_H_

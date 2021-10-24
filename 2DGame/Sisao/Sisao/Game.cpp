@@ -11,6 +11,7 @@ void Game::init()
 	m_pStateManager = new CStateManager;
 	//CMenuState::GetInstance...
 	m_pStateManager->ChangeState(CMenuState::GetInstance(m_pStateManager));
+	
 }
 
 

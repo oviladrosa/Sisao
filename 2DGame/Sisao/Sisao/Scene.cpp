@@ -2,6 +2,7 @@
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h" 
+#include "SceneState.h"
 #include "Game.h"
 #include "StateManager.h"
 
@@ -19,9 +20,10 @@
 #define INIT_CARD2_Y_TILES 15
 
 
-Scene::Scene(CStateManager* pManager) 
-	: CGameState(pManager)
+Scene::Scene(CSceneManager* sManager) 
+	: CSceneState(sManager)
 {
+	m_pSceneManager = sManager;
 	map = NULL;
 	player = NULL;
 	mirrorPlayer = NULL;
@@ -47,9 +49,9 @@ Scene::~Scene()
 		delete card2;
 }
 
-Scene* Scene::GetInstance(CStateManager* pManager)
+Scene* Scene::GetInstance(CSceneManager* sManager)
 {
-	static Scene Instance(pManager);
+	static Scene Instance(sManager);
 	return &Instance;
 }
 
@@ -108,7 +110,7 @@ void Scene::Update(DWORD deltaTime)
 	card1->update(deltaTime);
 	card2->update(deltaTime);
 	if (Game::instance().getKey(27)) {
-		ChangeState(CMenuState::GetInstance(m_pStateManager));
+		m_pSceneManager->ChangeState(CSceneState::GetInstance(m_pStateManager));
 	}
 	if (player->isDead() || mirrorPlayer->isDead()) Reset();
 }

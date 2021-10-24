@@ -88,7 +88,7 @@ void CMenuState::Update(DWORD deltaTime) {
 		switch (m_iCurrentSelection) {
 			case 0:
 				if (!m_pCurrentGame)
-					m_pCurrentGame = Scene::GetInstance(m_pStateManager);
+					m_pCurrentGame = Scene::GetInstance(m_pSceneManager);
 				m_pCurrentGame->Reset();
 				ChangeState(m_pCurrentGame);
 				break;

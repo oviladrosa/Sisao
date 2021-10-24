@@ -6,6 +6,11 @@ CGameState::CGameState(CStateManager* pManager)
 {
 }
 
+CGameState::CGameState(CSceneManager* sManager)
+	: m_pSceneManager(sManager)
+{
+}
+
 CGameState::~CGameState()
 {
 }
