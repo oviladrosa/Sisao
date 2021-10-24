@@ -6,9 +6,6 @@
 #include <iostream>
 #include "Scene.h"
 #include "Game.h"
-#include "StateManager.h"
-#include <iostream>
-
 
 
 CMenuState::CMenuState(CStateManager* pManager)
