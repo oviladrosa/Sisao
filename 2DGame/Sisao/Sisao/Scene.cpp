@@ -4,6 +4,8 @@
 #include "Scene.h" 
 #include "Game.h"
 #include "StateManager.h"
+#include <irrKlang.h>
+using namespace irrklang;
 
 
 #define SCREEN_X 0
@@ -18,6 +20,7 @@
 #define INIT_CARD2_X_TILES 6
 #define INIT_CARD2_Y_TILES 15
 
+ISoundEngine* SoundEngine2 = createIrrKlangDevice();
 
 Scene::Scene(CStateManager* pManager) 
 	: CGameState(pManager)
@@ -80,11 +83,13 @@ void Scene::init()
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, false);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
+	player->setSoundEngine(SoundEngine2);
 	// initialization mirror Player
 	mirrorPlayer = new Player();
 	mirrorPlayer->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, true);
 	mirrorPlayer->setPosition(glm::vec2(INIT_MIRROR_PLAYER_X_TILES * map->getTileSize(), INIT_MIRROR_PLAYER_Y_TILES * map->getTileSize()));
 	mirrorPlayer->setTileMap(map);
+	mirrorPlayer->setSoundEngine(SoundEngine2);
 	//initialization card 1
 	card1 = new Card();
 	card1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -99,6 +104,7 @@ void Scene::init()
 	float half_point = (INIT_PLAYER_X_TILES + INIT_MIRROR_PLAYER_X_TILES) / 2.0;
 	projection = glm::ortho((half_point*32.f)-SCREEN_WIDTH/4.f, (half_point * 32.f) + SCREEN_WIDTH / 4.f, float(SCREEN_HEIGHT - 1)/2.f, 0.f);
 	currentTime = 0.0f;
+	SoundEngine2->play2D("audio/gameloop.mp3", true);
 }
 
 void Scene::Update(DWORD deltaTime)
@@ -138,6 +144,7 @@ void Scene::Draw()
 }
 
 void Scene::Reset() {
+	SoundEngine2->play2D("audio/dead-sound.wav", false);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	mirrorPlayer->setPosition(glm::vec2(INIT_MIRROR_PLAYER_X_TILES * map->getTileSize(), INIT_MIRROR_PLAYER_Y_TILES * map->getTileSize()));
 }

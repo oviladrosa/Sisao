@@ -54,6 +54,7 @@ private:
 	bool up;
 	bool down;
 
+
 };
 
 #endif  // _MENUSTATE_H_

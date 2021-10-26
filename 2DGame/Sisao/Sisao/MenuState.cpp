@@ -8,8 +8,10 @@
 #include "Game.h"
 #include "StateManager.h"
 #include <iostream>
+#include <irrKlang.h>
+using namespace irrklang;
 
-
+ISoundEngine* SoundEngine = createIrrKlangDevice();
 
 CMenuState::CMenuState(CStateManager* pManager)
 	: CGameState(pManager), m_iCurrentSelection(0),
@@ -68,6 +70,7 @@ void CMenuState::Update(DWORD deltaTime) {
 	if (Game::instance().getSpecialKey(GLUT_KEY_UP) && !up) {
 		m_iCurrentSelection -= 1;
 		if (m_iCurrentSelection == -1) m_iCurrentSelection = 3;
+		SoundEngine->play2D("audio/digi_plink.wav", false);
 		Draw();
 		up = true;
 	}
@@ -80,6 +83,7 @@ void CMenuState::Update(DWORD deltaTime) {
 		if (m_iCurrentSelection == 4) m_iCurrentSelection = 0;
 		Draw();
 		down = true;
+		SoundEngine->play2D("audio/digi_plink.wav", false);
 	}
 	else if(!Game::instance().getSpecialKey(GLUT_KEY_DOWN) ){
 		down = false;

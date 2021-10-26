@@ -4,6 +4,8 @@
 #include <GL/glut.h>
 #include "Player.h"
 #include "Game.h"
+#include <irrKlang.h>
+using namespace irrklang;
 
 
 #define JUMP_ANGLE_STEP 4
@@ -246,6 +248,7 @@ void Player::update(int deltaTime)
 					else {
 						sprite->changeAnimation(JUMP_RIGHT_1);
 					}
+					SoundEnginePlayer->play2D("audio/jump-sound.wav", false);
 				}
 			}
 			else {
@@ -317,6 +320,11 @@ void Player::setPosition(const glm::vec2 &pos)
 {
 	posPlayer = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+}
+
+
+void Player::setSoundEngine(ISoundEngine *SoundEngine) {
+	SoundEnginePlayer = SoundEngine;
 }
 
 bool Player::isDead() {
