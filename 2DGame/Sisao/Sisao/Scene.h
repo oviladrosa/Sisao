@@ -7,7 +7,8 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "Card.h"
-
+#include "Obstacle.h"
+#include "HydraulicPress.h"
 #include "GameState.h"
 
 // Scene contains all the entities of our game.
@@ -38,6 +39,7 @@ private:
 	Player* mirrorPlayer;
 	Card* card1;
 	Card* card2;
+	HydraulicPress* hammer;
 	Texture bgText;
 	ShaderProgram texProgram;
 	Sprite* background;

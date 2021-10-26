@@ -19,6 +19,8 @@ using namespace irrklang;
 #define INIT_CARD1_Y_TILES 2
 #define INIT_CARD2_X_TILES 6
 #define INIT_CARD2_Y_TILES 15
+#define INIT_HAMMER_X_TILES 18
+#define INIT_HAMMER_Y_TILES 8
 
 ISoundEngine* SoundEngine2 = createIrrKlangDevice();
 
@@ -31,6 +33,7 @@ Scene::Scene(CStateManager* pManager)
 	background = NULL;
 	card1 = NULL;
 	card2 = NULL;
+	hammer = NULL;
 	init();
 }
 
@@ -48,6 +51,8 @@ Scene::~Scene()
 		delete card1;
 	if (card2 != NULL)
 		delete card2;
+	if (hammer != NULL)
+		delete hammer;
 }
 
 Scene* Scene::GetInstance(CStateManager* pManager)
@@ -101,6 +106,11 @@ void Scene::init()
 	card2->setPosition(glm::vec2(glm::vec2(INIT_CARD2_X_TILES * map->getTileSize(), INIT_CARD2_Y_TILES * map->getTileSize())));
 	card2->setTileMap(map);
 
+	hammer = new HydraulicPress();
+	hammer->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	hammer->setPosition(glm::vec2(glm::vec2(INIT_HAMMER_X_TILES * map->getTileSize(), INIT_HAMMER_Y_TILES * map->getTileSize())));
+	hammer->setTileMap(map);
+
 	float half_point = (INIT_PLAYER_X_TILES + INIT_MIRROR_PLAYER_X_TILES) / 2.0;
 	projection = glm::ortho((half_point*32.f)-SCREEN_WIDTH/4.f, (half_point * 32.f) + SCREEN_WIDTH / 4.f, float(SCREEN_HEIGHT - 1)/2.f, 0.f);
 	currentTime = 0.0f;
@@ -114,6 +124,7 @@ void Scene::Update(DWORD deltaTime)
 	mirrorPlayer->update(deltaTime);
 	card1->update(deltaTime);
 	card2->update(deltaTime);
+	hammer->update(deltaTime);
 	float half_point = (player->getPosition()[0] + mirrorPlayer->getPosition()[0])/2.f;
 	projection = glm::ortho((half_point) - SCREEN_WIDTH / 4.f, (half_point) + SCREEN_WIDTH / 4.f, float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
 	if (Game::instance().getKey(27)) {
@@ -139,6 +150,7 @@ void Scene::Draw()
 	mirrorPlayer->render();
 	card1->render();
 	card2->render();
+	hammer->render();
 	radiopool->renderTransparent();
 	
 }
