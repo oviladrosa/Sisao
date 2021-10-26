@@ -22,8 +22,8 @@ using namespace irrklang;
 
 ISoundEngine* SoundEngine2 = createIrrKlangDevice();
 
-Scene::Scene(CStateManager* pManager) 
-	: CGameState(pManager)
+Scene::Scene(CSceneManager* pManager)
+	: CGameScene(pManager)
 {
 	map = NULL;
 	player = NULL;
@@ -50,7 +50,7 @@ Scene::~Scene()
 		delete card2;
 }
 
-Scene* Scene::GetInstance(CStateManager* pManager)
+Scene* Scene::GetInstance(CSceneManager* pManager)
 {
 	static Scene Instance(pManager);
 	return &Instance;
@@ -116,9 +116,9 @@ void Scene::Update(DWORD deltaTime)
 	card2->update(deltaTime);
 	float half_point = (player->getPosition()[0] + mirrorPlayer->getPosition()[0])/2.f;
 	projection = glm::ortho((half_point) - SCREEN_WIDTH / 4.f, (half_point) + SCREEN_WIDTH / 4.f, float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
-	if (Game::instance().getKey(27)) {
+/*	if (Game::instance().getKey(27)) {
 		ChangeState(CMenuState::GetInstance(m_pStateManager));
-	}
+	}*/
 	if (player->isDead() || mirrorPlayer->isDead()) Reset();
 }
 
@@ -179,5 +179,12 @@ void Scene::initShaders()
 	fShader.free();
 }
 
+void Scene::EnterScene(){
+	SoundEngine2->play2D("audio/gameloop.mp3", true);
+}
+
+void Scene::LeaveScene() {
+	SoundEngine2->stopAllSounds();
+}
 
 

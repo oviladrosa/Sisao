@@ -8,26 +8,29 @@
 #include "Player.h"
 #include "Card.h"
 
-#include "GameState.h"
+#include "GameScene.h"
+#include "SceneManager.h"
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
 
 
-class Scene : public CGameState
+class Scene : public CGameScene
 {
 
 public:
-	static Scene* GetInstance(CStateManager* pManager);
+	static Scene* GetInstance(CSceneManager* pManager);
 	~Scene();
 
 	void init();
 	void Update(DWORD deltaTime);
 	void Draw();
 	void Reset();
+	void EnterScene();
+	void LeaveScene();
 
 protected:
-	Scene(CStateManager* pManager);
+	Scene(CSceneManager* pManager);
 
 private:
 	void initShaders();
