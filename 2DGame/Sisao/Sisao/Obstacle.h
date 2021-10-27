@@ -19,6 +19,13 @@ public:
 	virtual void setPosition(const glm::vec2& pos) {}
 	virtual bool isPlayerTouching(glm::vec2& posPlayer) { return false;}
 	
+	virtual bool LeftCollision(glm::vec2& posCollider) { return false; }
+	virtual bool RightCollision(glm::vec2& posCollider) { return false; }
+	virtual bool UpperCollision(glm::vec2& posCollider) { return false; }
+	virtual bool BottomCollision(glm::vec2& posCollider) { return false; }
+
+
+
 protected:
 	glm::vec2 getPosition();
 	glm::ivec2 tileMapDispl;

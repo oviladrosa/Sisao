@@ -67,3 +67,20 @@ bool HydraulicPress::isPlayerTouching(glm::vec2& posPlayer)
 	return (float(tileMapDispl.x + posPlayer.x) == float(tileMapDispl.x + initialPosition.x))
 		&& (float(tileMapDispl.y + posPlayer.y) == float(tileMapDispl.y + initialPosition.y));
 }
+
+bool HydraulicPress::LeftCollision(glm::vec2& posCollider) 
+{
+	return false; 
+}
+bool HydraulicPress::RightCollision(glm::vec2& posCollider) 
+{ 
+	return false; 
+}
+bool HydraulicPress::UpperCollision(glm::vec2& posCollider) 
+{ 
+	return false; 
+}
+bool HydraulicPress::BottomCollision(glm::vec2& posCollider) 
+{ 
+	return false; 
+}
