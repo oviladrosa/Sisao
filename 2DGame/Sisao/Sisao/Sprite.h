@@ -24,6 +24,7 @@ public:
 
 	void update(int deltaTime);
 	void render() const;
+	void renderTransparent() const;
 	void free();
 
 	void setNumberAnimations(int nAnimations);
@@ -33,6 +34,8 @@ public:
 	int animation() const;
 	
 	void setPosition(const glm::vec2 &pos);
+	glm::vec2 position() const;
+	glm::vec2& position();
 
 private:
 	Texture *texture;
@@ -40,7 +43,7 @@ private:
 	GLuint vao;
 	GLuint vbo;
 	GLint posLocation, texCoordLocation;
-	glm::vec2 position;
+	glm::vec2 pos;
 	int currentAnimation, currentKeyframe;
 	float timeAnimation;
 	glm::vec2 texCoordDispl;
