@@ -1,9 +1,9 @@
 #ifndef _GAME_INCLUDE
 #define _GAME_INCLUDE
 
+
 #include "Scene.h"
-#include "MenuState.h"
-#include "StateManager.h"
+
 
 #define SCREEN_WIDTH 1920
 #define SCREEN_HEIGHT 1080
@@ -17,12 +17,12 @@ class Game
 
 public:
 	Game() {}
-
-
-	static Game& instance()
+	
+	
+	static Game &instance()
 	{
 		static Game G;
-
+	
 		return G;
 	}
 	
@@ -42,12 +42,11 @@ public:
 	bool getKey(int key) const;
 	bool getSpecialKey(int key) const;
 
-
 private:
-	bool bPlay;                       // Continue to play game?                      // Scene to render
+	bool bPlay;                       // Continue to play game?
+	Scene scene;                      // Scene to render
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
-	CStateManager* m_pStateManager;
 
 };
 

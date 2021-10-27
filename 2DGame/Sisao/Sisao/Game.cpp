@@ -1,23 +1,18 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include "Game.h"
-#include "MenuState.h"
 
 
 void Game::init()
 {
 	bPlay = true;
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-	m_pStateManager = new CStateManager;
-	//CMenuState::GetInstance...
-	m_pStateManager->ChangeState(Scene::GetInstance(m_pStateManager));
+	scene.init();
 }
-
-
 
 bool Game::update(int deltaTime)
 {
-	m_pStateManager->Update(deltaTime);
+	scene.update(deltaTime);
 	
 	return bPlay;
 }
@@ -25,12 +20,13 @@ bool Game::update(int deltaTime)
 void Game::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	m_pStateManager->Draw();
+	scene.render();
 }
+
 void Game::keyPressed(int key)
 {
-	//if(key == 27) // Escape code
-		//bPlay = false;
+	if(key == 27) // Escape code
+		bPlay = false;
 	keys[key] = true;
 }
 

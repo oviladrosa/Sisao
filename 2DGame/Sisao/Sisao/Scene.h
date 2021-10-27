@@ -6,31 +6,22 @@
 #include "ShaderProgram.h"
 #include "TileMap.h"
 #include "Player.h"
-#include "Card.h"
-#include "Obstacle.h"
-#include "HydraulicPress.h"
-#include "Box.h"
-#include "Lever.h"
-#include "GameState.h"
+
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
 
 
-class Scene : public CGameState
+class Scene
 {
 
 public:
-	static Scene* GetInstance(CStateManager* pManager);
+	Scene();
 	~Scene();
 
 	void init();
-	void Update(DWORD deltaTime);
-	void Draw();
-	void Reset();
-
-protected:
-	Scene(CStateManager* pManager);
+	void update(int deltaTime);
+	void render();
 
 private:
 	void initShaders();
@@ -39,18 +30,10 @@ private:
 	TileMap *map;
 	Player *player;
 	Player* mirrorPlayer;
-	Card* card1;
-	Card* card2;
-	HydraulicPress* hammer;
-	Box* box;
-	Lever* lever;
-	Texture bgText;
 	ShaderProgram texProgram;
-	Sprite* background;
 	float currentTime;
 	glm::mat4 projection;
-	Texture rpText;
-	Sprite* radiopool;
+
 };
 
 
