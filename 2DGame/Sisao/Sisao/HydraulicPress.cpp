@@ -19,7 +19,7 @@ void HydraulicPress::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderPro
 {
 	spritesheet.loadFromFile("images/Hammer.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
-	sprite = Sprite::createSprite(glm::ivec2(32, 8), glm::vec2(0.125f, 1.f), &spritesheet, &shaderProgram);
+	sprite = Sprite::createSprite(glm::ivec2(32, 64), glm::vec2(0.125f, 1.f), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(2);
 
 	sprite->setAnimationSpeed(PRESS_DOWN, 8);
