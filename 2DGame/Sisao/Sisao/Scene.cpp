@@ -155,8 +155,6 @@ void Scene::Update(DWORD deltaTime)
 	hammer->update(deltaTime);
 	box->update(deltaTime);
 	lever->update(deltaTime);
-	float half_point = (player->getPosition()[0] + mirrorPlayer->getPosition()[0])/2.f;
-	projection = glm::ortho((half_point) - SCREEN_WIDTH / 4.f, (half_point) + SCREEN_WIDTH / 4.f, float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
 /*	if (Game::instance().getKey(27)) {
 		ChangeState(CMenuState::GetInstance(m_pStateManager));
 	}*/

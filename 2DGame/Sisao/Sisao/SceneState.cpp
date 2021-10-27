@@ -27,7 +27,7 @@ CSceneState::CSceneState(CStateManager* pManager)
 	initLevel04();
 	pointerScene5 = new Scene(m_pSceneManager);
 	initLevel05();
-	m_pSceneManager->ChangeScene(pointerScene4);
+	m_pSceneManager->ChangeScene(pointerScene1);
 }
 
 CSceneState::~CSceneState()
@@ -81,7 +81,7 @@ void CSceneState::EnterScene()
 }
 
 void CSceneState::resetState() {
-	m_pSceneManager->ChangeScene(pointerScene4);
+	m_pSceneManager->ChangeScene(pointerScene1);
 	m_pSceneManager->Reset();
 }
 
