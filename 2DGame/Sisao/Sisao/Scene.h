@@ -10,6 +10,11 @@
 
 #include "GameScene.h"
 #include "SceneManager.h"
+#include "Obstacle.h"
+#include "HydraulicPress.h"
+#include "Box.h"
+#include "Lever.h"
+#include "GameState.h"
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
@@ -46,6 +51,9 @@ private:
 	Player* mirrorPlayer;
 	Card* card1;
 	Card* card2;
+	HydraulicPress* hammer;
+	Box* box;
+	Lever* lever;
 	Texture bgText;
 	ShaderProgram texProgram;
 	Sprite* background;
