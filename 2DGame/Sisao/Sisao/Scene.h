@@ -7,6 +7,9 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "Card.h"
+
+#include "GameScene.h"
+#include "SceneManager.h"
 #include "Obstacle.h"
 #include "HydraulicPress.h"
 #include "Box.h"
@@ -17,20 +20,22 @@
 // It is responsible for updating and render them.
 
 
-class Scene : public CGameState
+class Scene : public CGameScene
 {
 
 public:
-	static Scene* GetInstance(CStateManager* pManager);
+	static Scene* GetInstance(CSceneManager* pManager);
 	~Scene();
 
 	void init();
 	void Update(DWORD deltaTime);
 	void Draw();
 	void Reset();
+	void EnterScene();
+	void LeaveScene();
 
 protected:
-	Scene(CStateManager* pManager);
+	Scene(CSceneManager* pManager);
 
 private:
 	void initShaders();

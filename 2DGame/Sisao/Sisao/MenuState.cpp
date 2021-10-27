@@ -3,6 +3,7 @@
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
 #include "StateManager.h"
+#include "SceneState.h"
 #include <iostream>
 #include "Scene.h"
 #include "Game.h"
@@ -91,15 +92,12 @@ void CMenuState::Update(DWORD deltaTime) {
 	if (Game::instance().getKey(13)) {
 		switch (m_iCurrentSelection) {
 			case 0:
-				if (!m_pCurrentGame)
-					m_pCurrentGame = Scene::GetInstance(m_pStateManager);
-				m_pCurrentGame->Reset();
-				ChangeState(m_pCurrentGame);
+				CSceneState::GetInstance(m_pStateManager)->resetState();
+				ChangeState(CSceneState::GetInstance(m_pStateManager));
 				break;
 			case 1:
-				if (m_pCurrentGame) {
-					ChangeState(m_pCurrentGame);
-				}
+				CSceneState::GetInstance(m_pStateManager)->EnterScene();
+				ChangeState(CSceneState::GetInstance(m_pStateManager));
 				break;
 		}
 		
