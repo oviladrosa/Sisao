@@ -9,6 +9,7 @@
 #include "Card.h"
 #include "Obstacle.h"
 #include "HydraulicPress.h"
+#include "Box.h"
 #include "GameState.h"
 
 // Scene contains all the entities of our game.
@@ -40,6 +41,7 @@ private:
 	Card* card1;
 	Card* card2;
 	HydraulicPress* hammer;
+	Box* box;
 	Texture bgText;
 	ShaderProgram texProgram;
 	Sprite* background;
