@@ -4,8 +4,6 @@
 
 #include "Sprite.h"
 #include "TileMap.h"
-#include <irrKlang.h>
-using namespace irrklang;
 
 
 // Player is basically a Sprite that represents the player. As such it has
@@ -19,12 +17,9 @@ public:
 	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, bool mirror);
 	void update(int deltaTime);
 	void render();
-	bool isDead();
-
+	
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
-	void setSoundEngine(ISoundEngine *SoundEngine);
-	glm::ivec2 getPosition();
 	
 private:
 	bool bJumping;
@@ -35,8 +30,7 @@ private:
 	Sprite *sprite;
 	TileMap *map;
 	bool mirror;
-	int lastMove;
-	ISoundEngine* SoundEnginePlayer;
+
 };
 
 
