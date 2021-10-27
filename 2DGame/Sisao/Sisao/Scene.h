@@ -19,7 +19,7 @@ class Scene : public CGameScene
 {
 
 public:
-	static Scene* GetInstance(CSceneManager* pManager);
+	Scene(CSceneManager* pManager);
 	~Scene();
 
 	void init();
@@ -28,9 +28,14 @@ public:
 	void Reset();
 	void EnterScene();
 	void LeaveScene();
-
-protected:
-	Scene(CSceneManager* pManager);
+	void setLevel(string s);
+	void setcard1Postion(glm::vec2 pos);
+	void setcard2Postion(glm::vec2 pos);
+	void setplayerPostion(glm::ivec2 pos);
+	void setmirrorplayerPostion(glm::ivec2 pos);
+	void setNextScene(int x);
+	bool isFinished();
+	int getNextScene();
 
 private:
 	void initShaders();
@@ -48,6 +53,13 @@ private:
 	glm::mat4 projection;
 	Texture rpText;
 	Sprite* radiopool;
+	string s_level;
+	bool finished;
+	glm::vec2 card1Position;
+	glm::vec2 card2Position;
+	glm::ivec2 playerPostion;
+	glm::ivec2 mirrorplayerPostion;
+	int nextScene;
 };
 
 

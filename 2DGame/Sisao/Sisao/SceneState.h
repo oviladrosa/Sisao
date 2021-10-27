@@ -5,10 +5,6 @@
 #include "Scene.h"
 #include "TextBlock.h"
 
-// Specialization of the CGameState class for 
-// the menu state. This displays a menu in which
-// the player can start a new game, continue an 
-// existing game, see the high-scores or exit the game.
 class CSceneState : public CGameState
 {
 public:
@@ -18,16 +14,24 @@ public:
 	void EnterScene();
 	void Update(DWORD deltaTime);
 	void resetState();
-
+	void initLevel01();
+	void initLevel02();
+	void initLevel03();
+	void initLevel04();
+	void initLevel05();
 	static CSceneState* GetInstance(CStateManager* pManager);
+	void nextLevel();
 
 protected:
 	CSceneState(CStateManager* pManager);
 
 private:
 	CSceneManager* m_pSceneManager;
-
-
+	Scene* pointerScene1;
+	Scene* pointerScene2;
+	Scene* pointerScene3;
+	Scene* pointerScene4;
+	Scene* pointerScene5;
 };
 
 #endif  // _SCENESTATE_H_

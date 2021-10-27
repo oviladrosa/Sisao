@@ -26,6 +26,8 @@ public:
 	// (transition from/to another state).
 	virtual void EnterScene() { }
 	virtual void LeaveScene() { }
+	virtual bool isFinished() { return false; }
+	virtual int getNextScene() { return 2; }
 
 protected:
 	// Helper function to switch to a new active state.
