@@ -3,6 +3,7 @@
 
 
 #include <glm/glm.hpp>
+#include <list>
 #include "ShaderProgram.h"
 #include "TileMap.h"
 #include "Player.h"
@@ -13,6 +14,7 @@
 #include "Obstacle.h"
 #include "HydraulicPress.h"
 #include "Box.h"
+#include "Wall.h"
 #include "Lever.h"
 #include "GameState.h"
 
@@ -47,7 +49,9 @@ private:
 	Card* card1;
 	Card* card2;
 	HydraulicPress* hammer;
-	Box* box;
+	list<Box*> boxList;
+	list<Wall*> wallList;
+	list<Wall*> wallListAux;
 	Lever* lever;
 	Texture bgText;
 	ShaderProgram texProgram;
