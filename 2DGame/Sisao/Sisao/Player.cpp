@@ -329,7 +329,7 @@ void Player::setSoundEngine(ISoundEngine *SoundEngine) {
 
 bool Player::isDead() {
 	if (!this->mirror) {
-		return posPlayer.y > 270;
+		return posPlayer.y > 220;
 	}
 	else {
 		return posPlayer.y < 270;

@@ -20,7 +20,8 @@ public:
 
 	void setTileMap(TileMap* tileMap);
 	void setPosition(const glm::vec2& pos);
-	bool isPlayerTouching(glm::vec2& posPlayer);
+	bool isPlayerTouching(glm::ivec2& posPlayer);
+	void changeAnimation(int i);
 
 private:
 	glm::ivec2 tileMapDispl;
