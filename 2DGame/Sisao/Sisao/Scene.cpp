@@ -21,10 +21,14 @@ using namespace irrklang;
 #define INIT_CARD2_Y_TILES 15
 #define INIT_HAMMER_X_TILES 18
 #define INIT_HAMMER_Y_TILES 8
-#define INIT_BOX_X_TILES 32 
-#define INIT_BOX_Y_TILES 15
+#define INIT_WALL1_X_TILES 39
+#define INIT_WALL1_Y_TILES 7
+#define INIT_WALL2_X_TILES 40
+#define INIT_WALL2_Y_TILES 7
+#define INIT_BOX_X_TILES 34
+#define INIT_BOX_Y_TILES 7
 #define INIT_LEVER_X_TILES 36 
-#define INIT_LEVER_Y_TILES 15
+#define INIT_LEVER_Y_TILES 7
 
 ISoundEngine* SoundEngine2 = createIrrKlangDevice();
 
@@ -38,7 +42,9 @@ Scene::Scene(CSceneManager* pManager)
 	card1 = NULL;
 	card2 = NULL;
 	hammer = NULL;
-	box = NULL;
+	boxList = list<Box*>();
+	wallList = list<Wall*>();
+	wallListAux = list<Wall*>();
 	lever = NULL;
 	init();
 }
@@ -59,8 +65,18 @@ Scene::~Scene()
 		delete card2;
 	if (hammer != NULL)
 		delete hammer;
-	if (box != NULL)
-		delete box;
+	if (!wallList.empty()) {
+		for (Wall* wall : wallList) delete wall;
+		wallList.clear();
+	}
+	if (!wallListAux.empty()) {
+		for (Wall* wall : wallListAux) delete wall;
+		wallListAux.clear();
+	}
+	if (!boxList.empty()) {
+		for (Box* box : boxList) delete box;
+		boxList.clear();
+	}
 	if (lever != NULL)
 		delete lever;
 }
@@ -115,10 +131,25 @@ void Scene::init()
 	hammer->setPosition(glm::vec2(INIT_HAMMER_X_TILES * map->getTileSize(), INIT_HAMMER_Y_TILES * map->getTileSize()));
 	hammer->setTileMap(map);
 
-	box = new Box();
+	Box* box = new Box();
 	box->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	box->setPosition(glm::vec2(INIT_BOX_X_TILES * map->getTileSize(), INIT_BOX_Y_TILES * map->getTileSize()));
 	box->setTileMap(map);
+	boxList.push_back(box);
+
+	Wall* wall = new Wall();
+	wall->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	wall->setPosition(glm::vec2(INIT_WALL1_X_TILES * map->getTileSize(), INIT_WALL1_Y_TILES * map->getTileSize()));
+	wall->setTileMap(map);
+	wallList.push_back(wall);
+	wallListAux.push_back(wall);
+
+	Wall* wall2 = new Wall();
+	wall2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	wall2->setPosition(glm::vec2(INIT_WALL2_X_TILES * map->getTileSize(), INIT_WALL2_Y_TILES * map->getTileSize()));
+	wall2->setTileMap(map);
+	wallList.push_back(wall2);
+	wallListAux.push_back(wall2);
 
 	lever = new Lever();
 	lever->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -153,8 +184,19 @@ void Scene::Update(DWORD deltaTime)
 		projection = glm::ortho((half_point)-SCREEN_WIDTH / 4.f, (half_point)+SCREEN_WIDTH / 4.f, float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
 	}
 	hammer->update(deltaTime);
-	box->update(deltaTime);
 	lever->update(deltaTime);
+	if (lever->isPlayerTouching(glm::vec2(player->getPosition()))
+		|| lever->isPlayerTouching(glm::vec2(mirrorPlayer->getPosition()))) lever->setEnabled(true);
+	if (lever->isEnabled()) wallList.clear();
+	else
+	{
+		for (Wall* wall : wallList)
+			wall->update(deltaTime);
+	}
+	for (Box* box : boxList)
+		box->update(deltaTime);
+	float half_point = (player->getPosition()[0] + mirrorPlayer->getPosition()[0])/2.f;
+	projection = glm::ortho((half_point) - SCREEN_WIDTH / 4.f, (half_point) + SCREEN_WIDTH / 4.f, float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
 /*	if (Game::instance().getKey(27)) {
 		ChangeState(CMenuState::GetInstance(m_pStateManager));
 	}*/
@@ -187,13 +229,29 @@ void Scene::Draw()
 	card1->render();
 	card2->render();
 	hammer->render();
-	box->render();
+	for(Wall* wall : wallList) wall->render();
+	for(Box* box : boxList) box->render();
 	lever->render();
 	radiopool->renderTransparent();
 }
 
 void Scene::Reset() {
 	SoundEngine2->play2D("audio/dead-sound.wav", false);
+	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+	mirrorPlayer->setPosition(glm::vec2(INIT_MIRROR_PLAYER_X_TILES * map->getTileSize(), INIT_MIRROR_PLAYER_Y_TILES * map->getTileSize()));
+	if (lever->isEnabled())
+	{
+		lever->setEnabled(false);
+		for (Wall* wall : wallListAux)
+		{
+			wallList.push_back(wall);
+			wall->render();
+			wall->setIsActive(true);
+		}
+	}
+	//cuidado aqui, tenemos que sustituir cada posicion inicial en su respectivo box.
+	for (Box* box : boxList)
+		box->setPosition(glm::vec2(INIT_BOX_X_TILES * map->getTileSize(), INIT_BOX_Y_TILES * map->getTileSize()));
 	player->setPosition(glm::vec2(playerPostion.x * map->getTileSize(), playerPostion.y * map->getTileSize()));
 	mirrorPlayer->setPosition(glm::vec2(mirrorplayerPostion.x * map->getTileSize(), mirrorplayerPostion.y * map->getTileSize()));
 	finished = false;
