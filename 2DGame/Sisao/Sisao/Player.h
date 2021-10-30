@@ -25,6 +25,8 @@ public:
 	void setPosition(const glm::vec2 &pos);
 	void setSoundEngine(ISoundEngine *SoundEngine);
 	glm::ivec2 getPosition();
+	void changeDemo(bool d);
+	void forceAnimation(int a);
 	
 private:
 	bool bJumping;
@@ -37,6 +39,7 @@ private:
 	bool mirror;
 	int lastMove;
 	ISoundEngine* SoundEnginePlayer;
+	bool demo;
 };
 
 

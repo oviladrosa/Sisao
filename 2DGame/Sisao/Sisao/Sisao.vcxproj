@@ -18,6 +18,7 @@
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="HydraulicPress.h" />
+    <ClInclude Include="InstructionsState.h" />
     <ClInclude Include="Lever.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="Obstacle.h" />
@@ -42,6 +43,7 @@
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="HydraulicPress.cpp" />
+    <ClCompile Include="InstructionsState.cpp" />
     <ClCompile Include="Lever.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuState.cpp" />

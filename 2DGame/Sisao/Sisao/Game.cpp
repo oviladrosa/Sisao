@@ -2,6 +2,7 @@
 #include <GL/glut.h>
 #include "Game.h"
 #include "MenuState.h"
+#include "InstructionsState.h"
 
 
 void Game::init()
@@ -10,7 +11,7 @@ void Game::init()
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	m_pStateManager = new CStateManager;
 	//CMenuState::GetInstance...
-	m_pStateManager->ChangeState(CMenuState::GetInstance(m_pStateManager));
+	m_pStateManager->ChangeState(CInstructionsState::GetInstance(m_pStateManager));
 }
 
 
