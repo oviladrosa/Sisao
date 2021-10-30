@@ -124,13 +124,33 @@ CInstructionsState::CInstructionsState(CStateManager* pManager)
 	Lever = Sprite::createSprite(glm::vec2(28.f, 28.f), glm::vec2(1.f, 1.f), &leverText, &texProgram);
 	Lever->setPosition(glm::vec2(575.f, 150.f));
 
-	barrierText.loadFromFile("images/Lever.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	barrierText.loadFromFile("images/Wall.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	barrierText.setMinFilter(GL_NEAREST);
 	barrierText.setMagFilter(GL_NEAREST);
 
-	Barrier = Sprite::createSprite(glm::vec2(28.f, 28.f), glm::vec2(1.f, 1.f), &leverText, &texProgram);
-	Barrier->setPosition(glm::vec2(575.f, 150.f));
+	Barrier = Sprite::createSprite(glm::vec2(22.f, 22.f), glm::vec2(1.f, 1.f), &barrierText, &texProgram);
+	Barrier->setPosition(glm::vec2(580.f, 200.f));
 
+	boxText.loadFromFile("images/Box2.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	boxText.setMinFilter(GL_NEAREST);
+	boxText.setMagFilter(GL_NEAREST);
+
+	Box = Sprite::createSprite(glm::vec2(22.f, 22.f), glm::vec2(1.f, 1.f), &boxText, &texProgram);
+	Box->setPosition(glm::vec2(580.f, 240.f));
+
+	hammer = new HydraulicPress();
+	hammer->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	hammer->setPosition(glm::vec2(580.f,340.f));
+
+	transporterText.loadFromFile("images/transporter.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	transporterText.setMinFilter(GL_NEAREST);
+	transporterText.setMagFilter(GL_NEAREST);
+
+	Transporter = Sprite::createSprite(glm::vec2(64.f, 8.f), glm::vec2(1.f, 1.f), &transporterText, &texProgram);
+	Transporter->setPosition(glm::vec2(560.f, 480.f));
+
+	right = false;
+	left = false;
 }
 
 CInstructionsState::~CInstructionsState()
@@ -148,19 +168,28 @@ void CInstructionsState::Update(DWORD deltaTime) {
 	playerRight->update(deltaTime);
 	playerUp->update(deltaTime);
 	card1->update(deltaTime);
+	hammer->update(deltaTime);
 	if (Game::instance().getKey(27)) {
 		ChangeState(CMenuState::GetInstance(m_pStateManager));
 	}
 	if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
-		if (page < 1) {
+		if (page < 2 && !right) {
 			page++;
+			right = true;
 		}
 
 	}
+	else {
+		right = false;
+	}
 	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT)) {
-		if (page > 0) {
+		if (page > 0 && !left) {
 			page--;
+			left = true;
 		}
+	}
+	else {
+		left = false;
 	}
 }
 
@@ -192,14 +221,29 @@ void CInstructionsState::Draw()
 	}
 	
 	if (page == 1) {
+		Barrier->render();
 		card1->render();
 		Lever->render();
+		Box->render();
+		hammer->render();
+		Transporter->render();
 		objects.render("Objects", glm::vec2(860.f, 210.f), 32, glm::vec4(1.f, 1.f, 1.f, 1.f));
 		objects.render("Card (goal)", glm::vec2(680.f, 270.f), 26, glm::vec4(1.f, 1.f, 1.f, 1.f));
 		objects.render("Lever", glm::vec2(680.f, 340.f), 26, glm::vec4(1.f, 1.f, 1.f, 1.f));
 		objects.render("Barrier", glm::vec2(680.f, 410.f), 26, glm::vec4(1.f, 1.f, 1.f, 1.f));
 		objects.render("Box", glm::vec2(680.f, 480.f), 26, glm::vec4(1.f, 1.f, 1.f, 1.f));
+		objects.render("Obstacles", glm::vec2(850.f, 600.f), 32, glm::vec4(1.f, 1.f, 1.f, 1.f));
+		objects.render("Hammer", glm::vec2(680.f, 700.f), 26, glm::vec4(1.f, 1.f, 1.f, 1.f));
+		objects.render("Spikes", glm::vec2(680.f, 850.f), 26, glm::vec4(1.f, 1.f, 1.f, 1.f));
+		objects.render("Sliders", glm::vec2(680.f, 920.f), 26, glm::vec4(1.f, 1.f, 1.f, 1.f));
+	}
 
+	if (page == 2) {
+		objects.render("How to win?", glm::vec2(840.f, 210.f), 32, glm::vec4(1.f, 1.f, 1.f, 1.f));
+		objects.render("1 - Do not make any of the characters fall into the radioactive pool", glm::vec2(530.f, 300.f), 26, glm::vec4(1.f, 1.f, 1.f, 1.f));
+		objects.render("2 - Dodge the obstacles all over the map", glm::vec2(680.f, 400.f), 26, glm::vec4(1.f, 1.f, 1.f, 1.f));
+		objects.render("3 - Use the levers on the map to deactivate the barriers that prevent you from continuing", glm::vec2(400.f, 500.f), 26, glm::vec4(1.f, 1.f, 1.f, 1.f));
+		objects.render("4 - Get both characters to pick up both cards at the same time", glm::vec2(550.f, 600.f), 26, glm::vec4(1.f, 1.f, 1.f, 1.f));
 	}
 	
 	title.render("INSTRUCTIONS", glm::vec2(710.f, 150.f), 64, glm::vec4(1.f, 1.f, 1.f, 1.f));
@@ -209,7 +253,7 @@ void CInstructionsState::Draw()
 	if (page > 0) {
 		goBack.render("<", glm::vec2(10.f, 500.f), 64, glm::vec4(1.f, 1.f, 1.f, 1.f));
 	}
-	if (page < 1) {
+	if (page < 2) {
 		goNext.render(">", glm::vec2(1880.f, 500.f), 64, glm::vec4(1.f, 1.f, 1.f, 1.f));
 	}
 	

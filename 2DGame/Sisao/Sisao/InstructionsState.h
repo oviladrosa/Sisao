@@ -30,6 +30,9 @@ private:
 	// The player validated the current selection
 	void SelectionChosen();
 
+	bool right;
+	bool left;
+
 	ShaderProgram texProgram;
 	Text moveLeft;
 	Text moveRight;
@@ -65,6 +68,15 @@ private:
 
 	Texture barrierText;
 	Sprite* Barrier;
+
+	Texture boxText;
+	Sprite* Box;
+
+	HydraulicPress* hammer;
+
+	Texture transporterText;
+	Sprite* Transporter;
+
 
 };
 
