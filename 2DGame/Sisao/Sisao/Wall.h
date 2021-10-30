@@ -1,14 +1,14 @@
-#ifndef _BOX_H
-#define _BOX_H
+#ifndef _WALL_H
+#define _WALL_H
 
 #include "Obstacle.h"
 
-class Box : public Obstacle
+class Wall : public Obstacle
 {
 
 public:
-	Box();
-	~Box();
+	Wall();
+	~Wall();
 
 	void init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram);
 	void update(int deltaTime);
@@ -23,6 +23,11 @@ public:
 	bool UpperCollision(glm::vec2& posCollider);
 	bool BottomCollision(glm::vec2& posCollider);
 
+	bool isWallActive();
+	void setIsActive(bool active);
+
+private:
+	bool isActive;
 };
 
-#endif	//_BOX_H
+#endif	//_WALL_H

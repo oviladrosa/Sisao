@@ -17,15 +17,18 @@ Lever::~Lever()
 
 void Lever::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 {
-	spritesheet.loadFromFile("images/Lever.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheet.loadFromFile("images/Lever2.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
-	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1.f, 1.f), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(1);
+	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.5f, 1.f), &spritesheet, &shaderProgram);
+	sprite->setNumberAnimations(2);
 
 	sprite->setAnimationSpeed(DISABLED, 1);
 	sprite->addKeyframe(DISABLED, glm::vec2(0.f, 0.f));
-	sprite->changeAnimation(0);
 
+	sprite->setAnimationSpeed(ENABLED, 1);
+	sprite->addKeyframe(ENABLED, glm::vec2(0.5f, 0.f));
+
+	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
 	initialPosition = glm::vec2(float(tileMapDispl.x + initialPosition.x), float(tileMapDispl.y + initialPosition.y));
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + initialPosition.x), float(tileMapDispl.y + initialPosition.y)));
@@ -34,7 +37,8 @@ void Lever::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 
 void Lever::update(int deltaTime)
 {
-	sprite->update(deltaTime);
+	if (enabled) sprite->changeAnimation(ENABLED);
+	else sprite->changeAnimation(DISABLED);
 }
 
 void Lever::render()
