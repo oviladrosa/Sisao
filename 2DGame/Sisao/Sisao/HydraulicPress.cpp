@@ -68,19 +68,19 @@ bool HydraulicPress::isPlayerTouching(glm::vec2& posPlayer)
 		&& (float(tileMapDispl.y + posPlayer.y) == float(tileMapDispl.y + posObstacle.y));
 }
 
-bool HydraulicPress::LeftCollision(glm::vec2& posCollider) 
+bool HydraulicPress::LeftCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
 {
 	return false; 
 }
-bool HydraulicPress::RightCollision(glm::vec2& posCollider) 
+bool HydraulicPress::RightCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
 { 
 	return false; 
 }
-bool HydraulicPress::UpperCollision(glm::vec2& posCollider) 
+bool HydraulicPress::UpperCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
 { 
 	return false; 
 }
-bool HydraulicPress::BottomCollision(glm::vec2& posCollider) 
+bool HydraulicPress::BottomCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
 { 
 	return false; 
 }

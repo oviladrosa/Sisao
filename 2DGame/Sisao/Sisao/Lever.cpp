@@ -73,19 +73,19 @@ void Lever::setEnabled(bool enable)
 	enabled = enable;
 }
 
-bool Lever::LeftCollision(glm::vec2& posCollider)
+bool Lever::LeftCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
 {
 	return false;
 }
-bool Lever::RightCollision(glm::vec2& posCollider)
+bool Lever::RightCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
 {
 	return false;
 }
-bool Lever::UpperCollision(glm::vec2& posCollider)
+bool Lever::UpperCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
 {
 	return false;
 }
-bool Lever::BottomCollision(glm::vec2& posCollider)
+bool Lever::BottomCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
 {
 	return false;
 }

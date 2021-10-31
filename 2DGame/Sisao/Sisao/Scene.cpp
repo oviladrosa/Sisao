@@ -233,19 +233,16 @@ void Scene::Update(DWORD deltaTime)
 				mirrorPlayer->forceAnimation(0); //STAND_LEFT
 			}
 		}
-		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
+		bool choquePlayer = wall->RightCollision(player->getPosition(), glm::ivec2(32, 32));
+		if (choquePlayer)
 		{
-			bool choquePlayer = wall->RightCollision(player->getPosition(), glm::ivec2(32, 32));
-			if (choquePlayer)
-			{
-				player->setPosition(glm::vec2(player->getPosition().x + 2, player->getPosition().y));
-				player->forceAnimation(1); //STAND_RIGHT
-			}
-			else if (wall->RightCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32)))
-			{
-				mirrorPlayer->setPosition(glm::vec2(player->getPosition().x - 2, player->getPosition().y));
-				mirrorPlayer->forceAnimation(1); //STAND_RIGHT
-			}
+			player->setPosition(glm::vec2(player->getPosition().x - 2, player->getPosition().y));
+			player->forceAnimation(1); //STAND_RIGHT
+		}
+		else if (wall->RightCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32)))
+		{
+			mirrorPlayer->setPosition(glm::vec2(player->getPosition().x - 2, player->getPosition().y));
+			mirrorPlayer->forceAnimation(1); //STAND_RIGHT
 		}
 	}
 }

@@ -58,19 +58,19 @@ bool Box::isPlayerTouching(glm::vec2& posPlayer)
 		&& (float(tileMapDispl.y + posPlayer.y) == float(tileMapDispl.y + posObstacle.y));
 }
 
-bool Box::LeftCollision(glm::vec2& posCollider)
+bool Box::LeftCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
 {
 	return false;
 }
-bool Box::RightCollision(glm::vec2& posCollider)
+bool Box::RightCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
 {
 	return false;
 }
-bool Box::UpperCollision(glm::vec2& posCollider)
+bool Box::UpperCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
 {
 	return false;
 }
-bool Box::BottomCollision(glm::vec2& posCollider)
+bool Box::BottomCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
 {
 	return false;
 }

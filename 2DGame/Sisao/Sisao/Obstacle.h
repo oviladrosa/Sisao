@@ -19,10 +19,10 @@ public:
 	virtual void setPosition(const glm::vec2& pos) {}
 	virtual bool isPlayerTouching(glm::vec2& posPlayer) { return false;}
 	
-	virtual bool LeftCollision(glm::vec2& posCollider) { return false; }
-	virtual bool RightCollision(glm::vec2& posCollider) { return false; }
-	virtual bool UpperCollision(glm::vec2& posCollider) { return false; }
-	virtual bool BottomCollision(glm::vec2& posCollider) { return false; }
+	virtual bool LeftCollision(const glm::ivec2& posCollider, const glm::ivec2& size) { return false; }
+	virtual bool RightCollision(const glm::ivec2& posCollider, const glm::ivec2& size) { return false; }
+	virtual bool UpperCollision(const glm::ivec2& posCollider, const glm::ivec2& size) { return false; }
+	virtual bool BottomCollision(const glm::ivec2& posCollider, const glm::ivec2& size) { return false; }
 
 
 
