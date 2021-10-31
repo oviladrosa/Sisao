@@ -21,9 +21,9 @@ using namespace irrklang;
 #define INIT_CARD2_Y_TILES 15
 #define INIT_HAMMER_X_TILES 18
 #define INIT_HAMMER_Y_TILES 8
-#define INIT_WALL1_X_TILES 39
-#define INIT_WALL1_Y_TILES 7
-#define INIT_WALL2_X_TILES 40
+#define INIT_WALL1_X_TILES 28
+#define INIT_WALL1_Y_TILES 6
+#define INIT_WALL2_X_TILES 25
 #define INIT_WALL2_Y_TILES 7
 #define INIT_BOX_X_TILES 34
 #define INIT_BOX_Y_TILES 7
@@ -46,7 +46,6 @@ Scene::Scene(CSceneManager* pManager)
 	wallList = list<Wall*>();
 	wallListAux = list<Wall*>();
 	lever = NULL;
-	init();
 }
 
 Scene::~Scene()
@@ -207,6 +206,37 @@ void Scene::Update(DWORD deltaTime)
 			card1->changeAnimation(1);
 			card2->changeAnimation(1);
 			finished = true;
+		}
+	}
+
+	for (Wall* wall : wallList)
+	{
+		if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
+		{
+			if (wall->LeftCollision(player->getPosition(), glm::ivec2(32, 32)))
+			{
+				player->setPosition(glm::vec2(player->getPosition().x + 2, player->getPosition().y));
+				player->forceAnimation(0); //STAND_LEFT
+			}
+			else if (wall->LeftCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32)))
+			{
+				mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x + 2, mirrorPlayer->getPosition().y));
+				mirrorPlayer->forceAnimation(0); //STAND_LEFT
+			}
+		}
+		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
+		{
+			bool choquePlayer = wall->RightCollision(player->getPosition(), glm::ivec2(32, 32));
+			if (choquePlayer)
+			{
+				player->setPosition(glm::vec2(player->getPosition().x + 2, player->getPosition().y));
+				player->forceAnimation(1); //STAND_RIGHT
+			}
+			else if (wall->RightCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32)))
+			{
+				mirrorPlayer->setPosition(glm::vec2(player->getPosition().x - 2, player->getPosition().y));
+				mirrorPlayer->forceAnimation(1); //STAND_RIGHT
+			}
 		}
 	}
 }

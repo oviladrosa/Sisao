@@ -8,8 +8,8 @@ Obstacle::~Obstacle()
 {
 }
 
-glm::vec2 Obstacle::getPosition()
+glm::ivec2 Obstacle::getPosition()
 {
-	return initialPosition;
+	return posObstacle;
 }
 

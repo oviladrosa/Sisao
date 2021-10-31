@@ -53,14 +53,14 @@ void Lever::setTileMap(TileMap* tileMap)
 
 void Lever::setPosition(const glm::vec2& pos)
 {
-	initialPosition = pos;
+	posObstacle = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + initialPosition.x), float(tileMapDispl.y + initialPosition.y)));
 }
 
 bool Lever::isPlayerTouching(glm::vec2& posPlayer)
 {
-	return (float(tileMapDispl.x + posPlayer.x) == float(tileMapDispl.x + initialPosition.x))
-		&& (float(tileMapDispl.y + posPlayer.y) == float(tileMapDispl.y + initialPosition.y));
+	return (float(tileMapDispl.x + posPlayer.x) == float(tileMapDispl.x + posObstacle.x))
+		&& (float(tileMapDispl.y + posPlayer.y) == float(tileMapDispl.y + posObstacle.y));
 }
 
 bool Lever::isEnabled()

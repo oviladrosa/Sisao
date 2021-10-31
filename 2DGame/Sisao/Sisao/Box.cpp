@@ -48,14 +48,14 @@ void Box::setTileMap(TileMap* tileMap)
 
 void Box::setPosition(const glm::vec2& pos)
 {
-	initialPosition = pos;
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + initialPosition.x), float(tileMapDispl.y + initialPosition.y)));
+	posObstacle = pos;
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posObstacle.x), float(tileMapDispl.y + posObstacle.y)));
 }
 
 bool Box::isPlayerTouching(glm::vec2& posPlayer)
 {
-	return (float(tileMapDispl.x + posPlayer.x) == float(tileMapDispl.x + initialPosition.x))
-		&& (float(tileMapDispl.y + posPlayer.y) == float(tileMapDispl.y + initialPosition.y));
+	return (float(tileMapDispl.x + posPlayer.x) == float(tileMapDispl.x + posObstacle.x))
+		&& (float(tileMapDispl.y + posPlayer.y) == float(tileMapDispl.y + posObstacle.y));
 }
 
 bool Box::LeftCollision(glm::vec2& posCollider)

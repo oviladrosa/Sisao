@@ -27,8 +27,8 @@ public:
 
 
 protected:
-	glm::vec2 getPosition();
-	glm::ivec2 tileMapDispl;
+	glm::ivec2 getPosition();
+	glm::ivec2 tileMapDispl, posObstacle;
 	glm::vec2 initialPosition;
 	Texture spritesheet;
 	Sprite* sprite;
