@@ -5,6 +5,7 @@
 #include "StateManager.h"
 #include "SceneState.h"
 #include "InstructionsState.h"
+#include "CreditsState.h"
 #include <iostream>
 #include "Scene.h"
 #include "Game.h"
@@ -103,6 +104,9 @@ void CMenuState::Update(DWORD deltaTime) {
 			case 2:
 				ChangeState(CInstructionsState::GetInstance(m_pStateManager));
 				break;
+			case 3:
+				ChangeState(CCreditsState::GetInstance(m_pStateManager));
+				break;
 		}
 		
 	}
@@ -131,13 +135,13 @@ void CMenuState::Draw()
 	newText.render("Start", glm::vec2(880.f, 350.f), 32, glm::vec4(0.f, 0.f, 0.f, 1.f));
 	restartText.render("Continue", glm::vec2(850.f, 500.f), 32, glm::vec4(0.f, 0.f, 0.f, 1.f));
 	optionsText.render("Instructions", glm::vec2(820.f, 650.f), 32, glm::vec4(0.f, 0.f, 0.f, 1.f));
-	exitText.render("Exit", glm::vec2(900.f, 800.f), 32, glm::vec4(0.f, 0.f, 0.f, 1.f));
+	exitText.render("Credits", glm::vec2(870.f, 800.f), 32, glm::vec4(0.f, 0.f, 0.f, 1.f));
 	title.render("SISAO", glm::vec2(740.f, 190.f), 128, glm::vec4(0.53f, 0.83f, 0.f, 1.f));
 }
 
 void CMenuState::EnterState()
 {
-	
+	Game::instance().keyReleased(13);
 }
 
 void CMenuState::SelectionUp()

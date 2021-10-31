@@ -14,6 +14,7 @@
     <ClInclude Include="AnimKeyframes.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="Card.h" />
+    <ClInclude Include="CreditsState.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="GameState.h" />
@@ -40,6 +41,7 @@
   <ItemGroup>
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="Card.cpp" />
+    <ClCompile Include="CreditsState.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="GameState.cpp" />
