@@ -27,6 +27,7 @@ public:
 	glm::ivec2 getPosition();
 	void changeDemo(bool d);
 	void forceAnimation(int a);
+	bool isMirror();
 	
 private:
 	bool bJumping;

@@ -350,25 +350,17 @@ glm::ivec2 Player::getPosition() {
 	return posPlayer;
 }
 
+bool Player::isMirror()
+{
+	return mirror;
+}
+
 void Player::changeDemo(bool d) {
 	demo = d;
 }
 
 void Player::forceAnimation(int a) {
-	switch (a)
-	{
-	case 0:
-		sprite->changeAnimation(MOVE_LEFT);
-		break;
-	case 1:
-		sprite->changeAnimation(MOVE_RIGHT);
-		break;
-	case 2:
-		sprite->changeAnimation(FULL_JUMP);
-		break;
-	default:
-		break;
-	}
+	sprite->changeAnimation(a);
 }
 
 
