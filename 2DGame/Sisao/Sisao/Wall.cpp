@@ -62,6 +62,19 @@ bool Wall::isPlayerTouching(glm::vec2& posPlayer)
 
 bool Wall::LeftCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
 {
+	int x, y0, y1;
+	int tileSize = map->getTileSize();
+	if (tileSize == 0) tileSize = 32;
+
+	x = (posCollider.x + 10) / tileSize;
+	y0 = posCollider.y / tileSize;
+	y1 = (posCollider.y + size.y - 1) / tileSize;
+	int pp = y0 * 64 + x;
+	for (int y = y0; y <= y1; y++)
+	{
+		if (y * 64 + x == (posObstacle.y / 32) * 64 + (posObstacle.x / 32))
+			return true;
+	}
 	return false;
 }
 
@@ -70,7 +83,6 @@ bool Wall::RightCollision(const glm::ivec2& posCollider, const glm::ivec2& size)
 	int x, y0, y1;
 	int tileSize = map->getTileSize();
 	if (tileSize == 0) tileSize = 32;
-
 
 	x = (posCollider.x + size.x - 10) / tileSize;
 	y0 = posCollider.y / tileSize;
