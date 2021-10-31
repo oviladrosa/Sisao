@@ -45,6 +45,7 @@ Scene::Scene(CSceneManager* pManager)
 	boxList = list<Box*>();
 	wallList = list<Wall*>();
 	wallListAux = list<Wall*>();
+	transporterList = list<Transporter*>();
 	lever = NULL;
 }
 
@@ -75,6 +76,10 @@ Scene::~Scene()
 	if (!boxList.empty()) {
 		for (Box* box : boxList) delete box;
 		boxList.clear();
+	}
+	if (!transporterList.empty()) {
+		for (Transporter* trans: transporterList) delete trans;
+		transporterList.clear();
 	}
 	if (lever != NULL)
 		delete lever;
@@ -166,6 +171,7 @@ void Scene::init()
 void Scene::Update(DWORD deltaTime)
 {
 	currentTime += deltaTime;
+	checkTransporterCollisions();
 	if (!finished) {
 		player->update(deltaTime);
 		mirrorPlayer->update(deltaTime);
@@ -245,6 +251,10 @@ void Scene::Update(DWORD deltaTime)
 			mirrorPlayer->forceAnimation(1); //STAND_RIGHT
 		}
 	}
+	for (Transporter* t : transporterList) {
+		t->update(deltaTime);
+	}
+	
 }
 
 void Scene::Draw()
@@ -267,6 +277,7 @@ void Scene::Draw()
 	hammer->render();
 	for(Wall* wall : wallList) wall->render();
 	for(Box* box : boxList) box->render();
+	for (Transporter* t : transporterList) t->render();
 	lever->render();
 	radiopool->renderTransparent();
 }
@@ -298,13 +309,13 @@ void Scene::initShaders()
 	Shader vShader, fShader;
 
 	vShader.initFromFile(VERTEX_SHADER, "shaders/texture.vert");
-	if(!vShader.isCompiled())
+	if (!vShader.isCompiled())
 	{
 		cout << "Vertex Shader Error" << endl;
 		cout << "" << vShader.log() << endl << endl;
 	}
 	fShader.initFromFile(FRAGMENT_SHADER, "shaders/texture.frag");
-	if(!fShader.isCompiled())
+	if (!fShader.isCompiled())
 	{
 		cout << "Fragment Shader Error" << endl;
 		cout << "" << fShader.log() << endl << endl;
@@ -313,7 +324,7 @@ void Scene::initShaders()
 	texProgram.addShader(vShader);
 	texProgram.addShader(fShader);
 	texProgram.link();
-	if(!texProgram.isLinked())
+	if (!texProgram.isLinked())
 	{
 		cout << "Shader Linking Error" << endl;
 		cout << "" << texProgram.log() << endl << endl;
@@ -323,7 +334,7 @@ void Scene::initShaders()
 	fShader.free();
 }
 
-void Scene::EnterScene(){
+void Scene::EnterScene() {
 	SoundEngine2->play2D("audio/gameloop.mp3", true);
 }
 
@@ -361,6 +372,46 @@ int Scene::getNextScene() {
 
 bool Scene::isFinished() {
 	return finished;
+}
+
+void Scene::addTransporter(glm::vec2 pos, bool left) {
+	Transporter* transporter = new Transporter();
+	transporter->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	transporter->setTileMap(map);
+	transporter->setPosition(glm::vec2(pos.x * map->getTileSize(), pos.y * map->getTileSize()));
+	transporter->setDirection(left);
+	transporterList.push_back(transporter);
+}
+
+void Scene::checkTransporterCollisions() {
+	for (Transporter* trans : transporterList) {
+		if (trans->LeftCollision(player->getPosition(), glm::ivec2(32, 32))) {
+			player->setPosition(glm::vec2(player->getPosition().x + 2, player->getPosition().y));
+		}
+		if (trans->RightCollision(player->getPosition(), glm::ivec2(32, 32))) {
+			player->setPosition(glm::vec2(player->getPosition().x - 2, player->getPosition().y));
+		}
+		if (trans->UpperCollision(player->getPosition(), glm::ivec2(32, 32))) {
+			player->setPosition(glm::vec2(player->getPosition().x, player->getPosition().y + 2));
+		}
+		if (trans->BottomCollision(player->getPosition(), glm::ivec2(32, 32))) {
+			player->setPosition(glm::vec2(player->getPosition().x + trans->getMovement(), player->getPosition().y - 4));
+			player->setTransporterCollision(true);
+		}
+
+		if (trans->LeftCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
+			mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x + 2, mirrorPlayer->getPosition().y));
+		}
+		if (trans->RightCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
+			mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x - 2, mirrorPlayer->getPosition().y));
+		}
+		if (trans->UpperCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
+			mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x + trans->getMovement(), mirrorPlayer->getPosition().y + 4));
+			mirrorPlayer->setTransporterCollision(true);
+		}
+		
+		
+	}
 }
 
 

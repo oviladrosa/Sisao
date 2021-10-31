@@ -28,6 +28,8 @@ public:
 	void changeDemo(bool d);
 	void forceAnimation(int a);
 	bool isMirror();
+	int getAnimation();
+	void setTransporterCollision(bool tc);
 	
 private:
 	bool bJumping;
@@ -41,6 +43,7 @@ private:
 	int lastMove;
 	ISoundEngine* SoundEnginePlayer;
 	bool demo;
+	bool transporterColl;
 };
 
 

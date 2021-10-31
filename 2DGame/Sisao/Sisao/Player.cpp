@@ -107,6 +107,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, bo
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	lastMove = 0;
 	demo = false;
+	transporterColl = false;
 }
 
 void Player::update(int deltaTime)
@@ -114,7 +115,7 @@ void Player::update(int deltaTime)
 	sprite->update(deltaTime);
 	if (!demo) {
 
-	
+		
 		if(Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 		{
 			lastMove = 0;
@@ -161,9 +162,13 @@ void Player::update(int deltaTime)
 		{
 			if (!this->mirror) {
 				jumpAngle += JUMP_ANGLE_STEP;
-				if (map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y)) 
+				
+				if (map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y))
 				{
 					jumpAngle = 180;
+				}
+				if (jumpAngle < 45 && transporterColl) {
+					transporterColl = false;
 				}
 				
 				if (jumpAngle == 44) {
@@ -187,11 +192,15 @@ void Player::update(int deltaTime)
 					bJumping = false;
 					posPlayer.y = startY;
 				}
+				else if (jumpAngle > 90 && transporterColl) {
+					bJumping = false;
+				}
 				else
 				{
 					posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
 					if (jumpAngle > 90)
 						bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
+					
 				}
 			}
 			else {
@@ -200,10 +209,8 @@ void Player::update(int deltaTime)
 				{
 					jumpAngle = 180;
 				}
-				if (jumpAngle == 180)
-				{
-					bJumping = false;
-					posPlayer.y = startY;
+				if (jumpAngle < 45 && transporterColl) {
+					transporterColl = false;
 				}
 				if (jumpAngle == 44) {
 					if (sprite->animation() == JUMP_LEFT_1) {
@@ -221,11 +228,21 @@ void Player::update(int deltaTime)
 						sprite->changeAnimation(JUMP_RIGHT_3);
 					}
 				}
+				if (jumpAngle == 180)
+				{
+					bJumping = false;
+					posPlayer.y = startY;
+				}
+				else if (jumpAngle > 90 && transporterColl) {
+					bJumping = false;
+				}
 				else
 				{
 					posPlayer.y = int(startY + JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
 					if (jumpAngle > 90)
 						bJumping = !map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
+				
+
 				}
 			}
 		
@@ -236,8 +253,11 @@ void Player::update(int deltaTime)
 			else  posPlayer.y -= FALL_STEP;
 		
 			if(!this->mirror) {
-				if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y))
+				if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y) || transporterColl)
 				{
+					if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y)) {
+						transporterColl = false;
+					}
 					if (sprite->animation() == FALLING_RIGHT || sprite->animation() == JUMP_RIGHT_1 || sprite->animation() == JUMP_RIGHT_2 || sprite->animation() == JUMP_RIGHT_3) {
 						sprite->changeAnimation(STAND_RIGHT);
 					}
@@ -247,9 +267,11 @@ void Player::update(int deltaTime)
 					if (Game::instance().getSpecialKey(GLUT_KEY_UP))
 					{
 						bJumping = true;
+						transporterColl = false;
 						jumpAngle = 0;
 						startY = posPlayer.y;
 						lastMove = 0;
+						
 					
 						if (sprite->animation() == STAND_LEFT || sprite->animation() == MOVE_LEFT || sprite->animation() == FALLING_LEFT || sprite->animation() == IDLE_LEFT) {
 							sprite->changeAnimation(JUMP_LEFT_1);
@@ -261,21 +283,21 @@ void Player::update(int deltaTime)
 					}
 				}
 				else {
-					if (sprite->animation() != FALLING_RIGHT && (sprite->animation() == STAND_RIGHT || sprite->animation() == MOVE_RIGHT || sprite->animation() == JUMP_RIGHT_1 || sprite->animation() == JUMP_RIGHT_2 || sprite->animation() == JUMP_RIGHT_3)) {
+					if (sprite->animation() != FALLING_RIGHT && (sprite->animation() == STAND_RIGHT || sprite->animation() == JUMP_RIGHT_1 || sprite->animation() == JUMP_RIGHT_2 || sprite->animation() == JUMP_RIGHT_3)) {
 						sprite->changeAnimation(FALLING_RIGHT);
 					}
-					if (sprite->animation() != FALLING_LEFT && (sprite->animation() == STAND_LEFT || sprite->animation() == MOVE_LEFT || sprite->animation() == JUMP_LEFT_1 || sprite->animation() == JUMP_LEFT_2 || sprite->animation() == JUMP_LEFT_3)) {
+					if (sprite->animation() != FALLING_LEFT && (sprite->animation() == STAND_LEFT  || sprite->animation() == JUMP_LEFT_1 || sprite->animation() == JUMP_LEFT_2 || sprite->animation() == JUMP_LEFT_3)) {
 						sprite->changeAnimation(FALLING_LEFT);
 					}
-					if (posPlayer.y > 400) {
-						posPlayer.x = 200;
-						posPlayer.y = 100;
-					}
+					
 				}
 			}
 			else {
-				if (map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y))
+				if (map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y) || transporterColl)
 				{
+					if (map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y)) {
+						transporterColl = false;
+					}
 					if (sprite->animation() == FALLING_RIGHT || sprite->animation() == JUMP_RIGHT_1 || sprite->animation() == JUMP_RIGHT_2 || sprite->animation() == JUMP_RIGHT_3) {
 						sprite->changeAnimation(STAND_RIGHT);
 					}
@@ -285,9 +307,11 @@ void Player::update(int deltaTime)
 					if (Game::instance().getSpecialKey(GLUT_KEY_UP))
 					{
 						bJumping = true;
+						transporterColl = false;
 						jumpAngle = 0;
 						startY = posPlayer.y;
 						lastMove = 0;
+						
 						if (sprite->animation() == STAND_LEFT || sprite->animation() == MOVE_LEFT || sprite->animation() == FALLING_LEFT || sprite->animation() == IDLE_LEFT) {
 							sprite->changeAnimation(JUMP_LEFT_1);
 						}
@@ -303,10 +327,7 @@ void Player::update(int deltaTime)
 					if (sprite->animation() != FALLING_LEFT && (sprite->animation() == STAND_LEFT || sprite->animation() == MOVE_LEFT)) {
 						sprite->changeAnimation(FALLING_LEFT);
 					}
-					if (posPlayer.y < 200) {
-						posPlayer.x = 200;
-						posPlayer.y = 400;
-					}
+				
 				}
 			}
 		
@@ -361,6 +382,14 @@ void Player::changeDemo(bool d) {
 
 void Player::forceAnimation(int a) {
 	sprite->changeAnimation(a);
+}
+
+int Player::getAnimation() {
+	return sprite->animation();
+}
+
+void Player::setTransporterCollision(bool tc) {
+	transporterColl = tc;
 }
 
 
