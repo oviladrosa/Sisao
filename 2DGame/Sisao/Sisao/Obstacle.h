@@ -21,13 +21,13 @@ public:
 	
 	virtual bool LeftCollision(const glm::ivec2& posCollider, const glm::ivec2& size) { return false; }
 	virtual bool RightCollision(const glm::ivec2& posCollider, const glm::ivec2& size) { return false; }
-	virtual bool UpperCollision(const glm::ivec2& posCollider, const glm::ivec2& size) { return false; }
-	virtual bool BottomCollision(const glm::ivec2& posCollider, const glm::ivec2& size) { return false; }
+	virtual bool UpperCollision(const glm::ivec2& posCollider, const glm::ivec2& size, int* posY) { return false; }
+	virtual bool BottomCollision(const glm::ivec2& posCollider, const glm::ivec2& size, int* posY) { return false; }
 
-
+	virtual glm::ivec2 getPosition();
 
 protected:
-	glm::ivec2 getPosition();
+	
 	glm::ivec2 tileMapDispl, posObstacle;
 	glm::vec2 initialPosition;
 	Texture spritesheet;

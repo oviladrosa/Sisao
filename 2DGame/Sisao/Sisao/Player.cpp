@@ -355,6 +355,11 @@ bool Player::isMirror()
 	return mirror;
 }
 
+bool Player::isJumping()
+{
+	return bJumping;
+}
+
 void Player::changeDemo(bool d) {
 	demo = d;
 }

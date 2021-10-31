@@ -76,11 +76,11 @@ bool HydraulicPress::RightCollision(const glm::ivec2& posCollider, const glm::iv
 { 
 	return false; 
 }
-bool HydraulicPress::UpperCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
+bool HydraulicPress::UpperCollision(const glm::ivec2& posCollider, const glm::ivec2& size, int* posY) const
 { 
 	return false; 
 }
-bool HydraulicPress::BottomCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
+bool HydraulicPress::BottomCollision(const glm::ivec2& posCollider, const glm::ivec2& size, int* posY) const
 { 
 	return false; 
 }

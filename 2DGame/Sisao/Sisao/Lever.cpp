@@ -81,11 +81,11 @@ bool Lever::RightCollision(const glm::ivec2& posCollider, const glm::ivec2& size
 {
 	return false;
 }
-bool Lever::UpperCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
+bool Lever::UpperCollision(const glm::ivec2& posCollider, const glm::ivec2& size, int* posY) const
 {
 	return false;
 }
-bool Lever::BottomCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
+bool Lever::BottomCollision(const glm::ivec2& posCollider, const glm::ivec2& size, int* posY) const
 {
 	return false;
 }

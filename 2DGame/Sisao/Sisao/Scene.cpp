@@ -25,8 +25,8 @@ using namespace irrklang;
 #define INIT_WALL1_Y_TILES 6
 #define INIT_WALL2_X_TILES 25
 #define INIT_WALL2_Y_TILES 7
-#define INIT_BOX_X_TILES 34
-#define INIT_BOX_Y_TILES 7
+#define INIT_BOX_X_TILES 7
+#define INIT_BOX_Y_TILES 6
 #define INIT_LEVER_X_TILES 36 
 #define INIT_LEVER_Y_TILES 7
 
@@ -240,6 +240,42 @@ void Scene::Update(DWORD deltaTime)
 		{
 			mirrorPlayer->setPosition(glm::vec2(player->getPosition().x - 2, player->getPosition().y));
 			mirrorPlayer->forceAnimation(1); //STAND_RIGHT
+		}
+	}
+	
+	for (Box* box : boxList)
+	{
+		int posY;
+		
+		if (box->LeftCollision(player->getPosition(), glm::ivec2(32, 32)))
+		{
+			player->setPosition(glm::vec2(player->getPosition().x + 0.5, player->getPosition().y));
+			box->setPosition(glm::vec2(box->getPosition().x - 2.5, box->getPosition().y));
+		}
+		if (box->LeftCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32)))
+		{
+			mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x + 0.5, mirrorPlayer->getPosition().y));
+			box->setPosition(glm::vec2(box->getPosition().x - 2.5, box->getPosition().y));
+		}
+		if (box->RightCollision(player->getPosition(), glm::ivec2(32, 32)))
+		{
+			player->setPosition(glm::vec2(player->getPosition().x - 0.5, player->getPosition().y));
+			box->setPosition(glm::vec2(box->getPosition().x + 2.5, box->getPosition().y));			
+		}
+		if (box->RightCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32)))
+		{
+			mirrorPlayer->setPosition(glm::vec2(player->getPosition().x - 0.5, player->getPosition().y));
+			box->setPosition(glm::vec2(box->getPosition().x + 2.5, box->getPosition().y));
+		}
+		if (box->BottomCollision(player->getPosition(), glm::ivec2(32, 32), &posY))
+		{
+			player->setPosition(glm::vec2(player->getPosition().x, posY));
+			box->setPosition(glm::vec2(box->getPosition().x, box->getPosition().y));
+		}
+		if (box->BottomCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32), &posY))
+		{
+			mirrorPlayer->setPosition(glm::vec2(player->getPosition().x, posY));
+			box->setPosition(glm::vec2(box->getPosition().x, box->getPosition().y));
 		}
 	}
 }

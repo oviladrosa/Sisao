@@ -20,8 +20,8 @@ public:
 
 	bool LeftCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const;
 	bool RightCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const;
-	bool UpperCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const;
-	bool BottomCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const;
+	bool UpperCollision(const glm::ivec2& posCollider, const glm::ivec2& size, int* posY) const;
+	bool BottomCollision(const glm::ivec2& posCollider, const glm::ivec2& size, int* posY) const;
 
 	bool isWallActive();
 	void setIsActive(bool active);

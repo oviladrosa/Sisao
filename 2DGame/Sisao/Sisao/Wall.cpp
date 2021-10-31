@@ -96,11 +96,11 @@ bool Wall::RightCollision(const glm::ivec2& posCollider, const glm::ivec2& size)
 	return false;
 }
 
-bool Wall::UpperCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
+bool Wall::UpperCollision(const glm::ivec2& posCollider, const glm::ivec2& size, int* posY) const
 {
 	return false;
 }
-bool Wall::BottomCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
+bool Wall::BottomCollision(const glm::ivec2& posCollider, const glm::ivec2& size, int* posY) const
 {
 	return false;
 }
