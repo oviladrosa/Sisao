@@ -59,11 +59,11 @@ bool Wall::isPlayerTouching(glm::vec2& posPlayer)
 		&& (float(tileMapDispl.y + posPlayer.y) == float(tileMapDispl.y + initialPosition.y));
 }
 
-bool Wall::LeftCollision(glm::vec2& posCollider)
+bool Wall::LeftCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
 {
 	return false;
 }
-bool Wall::RightCollision(glm::vec2& posCollider)
+bool Wall::RightCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
 {
 	return false;
 }
