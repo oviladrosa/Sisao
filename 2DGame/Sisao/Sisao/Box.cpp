@@ -182,12 +182,12 @@ bool Box::UpperCollision(const glm::ivec2& posCollider, const glm::ivec2& size, 
 	x0 = float(posCollider.x + 10);
 	x1 = float(posCollider.x + size.x - 10);
 	y = float(posCollider.y);
-	intY = (posCollider.y + size.y - 1) / 32;
+	intY = (posCollider.y + size.y - 10) / 32;
 	for (float x = x0; x <= x1; x += 0.1f)
 	{
-		if (x >= float(posObstacle.x) && x <= float(posObstacle.x + size.x) && y >= float(posObstacle.y) && y <= float(posObstacle.y + size.y))
+		if (x >= float(posObstacle.x) && x <= float(posObstacle.x + size.x) && y == float(posObstacle.y + size.y))
 		{
-			*posY = 32 * intY + size.y;
+			*posY = posCollider.y + 4;
 			return true;
 		}
 	}
@@ -205,7 +205,7 @@ bool Box::BottomCollision(const glm::ivec2& posCollider, const glm::ivec2& size,
 	intY = (posCollider.y + size.y - 10) / 32;
 	for (float x = x0; x <= x1; x+=0.1f)
 	{
-		if (x >= float(posObstacle.x + 4) && x <= float(posObstacle.x + size.x - 4) && y == float(posObstacle.y + 4))
+		if (x >= float(posObstacle.x) && x <= float(posObstacle.x + size.x) && y == float(posObstacle.y))
 		{
 			*posY = posCollider.y - 4;
 			return true;

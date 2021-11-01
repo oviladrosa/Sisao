@@ -54,6 +54,7 @@ void Lever::setTileMap(TileMap* tileMap)
 void Lever::setPosition(const glm::vec2& pos)
 {
 	posObstacle = pos;
+	initialPosition = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + initialPosition.x), float(tileMapDispl.y + initialPosition.y)));
 }
 
