@@ -34,7 +34,11 @@ public:
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const;
 
-	
+	bool collisionObstacleMoveLeft(const glm::ivec2& pos, const glm::ivec2& size);
+	bool collisionObstacleMoveRight(const glm::ivec2& pos, const glm::ivec2& size);
+	bool collisionObstacleMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY);
+	bool collisionObstacleMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY);
+
 private:
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);

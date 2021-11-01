@@ -60,7 +60,7 @@ bool Wall::isPlayerTouching(glm::vec2& posPlayer)
 		&& (float(tileMapDispl.y + posPlayer.y) == float(tileMapDispl.y + initialPosition.y));
 }
 
-bool Wall::LeftCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
+bool Wall::LeftCollision(const glm::ivec2& posCollider, const glm::ivec2& size)
 {
 	int x, y0, y1;
 	int tileSize = map->getTileSize();
@@ -78,7 +78,7 @@ bool Wall::LeftCollision(const glm::ivec2& posCollider, const glm::ivec2& size) 
 	return false;
 }
 
-bool Wall::RightCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
+bool Wall::RightCollision(const glm::ivec2& posCollider, const glm::ivec2& size)
 {
 	int x, y0, y1;
 	int tileSize = map->getTileSize();
@@ -96,11 +96,11 @@ bool Wall::RightCollision(const glm::ivec2& posCollider, const glm::ivec2& size)
 	return false;
 }
 
-bool Wall::UpperCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
+bool Wall::UpperCollision(const glm::ivec2& posCollider, const glm::ivec2& size, int* posY)
 {
 	return false;
 }
-bool Wall::BottomCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const
+bool Wall::BottomCollision(const glm::ivec2& posCollider, const glm::ivec2& size, int* posY)
 {
 	return false;
 }

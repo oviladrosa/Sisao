@@ -28,6 +28,8 @@ public:
 	void changeDemo(bool d);
 	void forceAnimation(int a);
 	bool isMirror();
+	bool isJumping();
+	void setJumping(bool jump);
 	int getAnimation();
 	void setTransporterCollision(bool tc);
 	glm::vec2 getVelocity();

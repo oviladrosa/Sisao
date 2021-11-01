@@ -367,6 +367,10 @@ void Player::setPosition(const glm::vec2 &pos)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
+void Player::setJumping(bool jump)
+{
+	bJumping = jump;
+}
 
 void Player::setSoundEngine(ISoundEngine *SoundEngine) {
 	SoundEnginePlayer = SoundEngine;
@@ -388,6 +392,11 @@ glm::ivec2 Player::getPosition() {
 bool Player::isMirror()
 {
 	return mirror;
+}
+
+bool Player::isJumping()
+{
+	return bJumping;
 }
 
 void Player::changeDemo(bool d) {
