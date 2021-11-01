@@ -40,6 +40,10 @@ public:
     void Update(float dt, Player& object, unsigned int newParticles, glm::vec2 offset = glm::vec2(0.0f, 0.0f));
     // render all particles
     void Draw(glm::mat4 proj);
+    void easyUpdate(float dt);
+    void respawnAllParticles(glm::vec2 pos, glm::vec2 offset);
+
+
 private:
     // state
     std::vector<Particle> particles;

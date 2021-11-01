@@ -35,6 +35,22 @@ void ParticleGenerator::Update(float dt, Player& object, unsigned int newParticl
     }
 }
 
+void ParticleGenerator::easyUpdate(float dt)
+{
+  
+    // update all particles
+    for (unsigned int i = 0; i < this->amount; ++i)
+    {
+        Particle& p = this->particles[i];
+        p.Life -= dt / 100.f; // reduce life
+        if (p.Life > 0.0f)
+        {	// particle is alive, thus update
+            p.Position -= p.Velocity * dt;
+            p.Color.a -= dt * 2.5f;
+        }
+    }
+}
+
 // render all particles
 void ParticleGenerator::Draw(glm::mat4 proj)
 {
@@ -120,7 +136,7 @@ void ParticleGenerator::respawnParticle(Particle& particle, Player& object, glm:
         randx = randx * -1;
     }
     float rColor = 0.5f + ((rand() % 100) / 100.0f);
-    if (!object.isMirror()) {
+    if (!object.isMirror()) {       
         particle.Position = (glm::vec2(object.getPosition()) + glm::vec2(16.f, 30.f)) + glm::vec2(randx, -randomy);
     }
     else {
@@ -130,4 +146,29 @@ void ParticleGenerator::respawnParticle(Particle& particle, Player& object, glm:
     particle.Color = glm::vec4(rColor, rColor, rColor, 1.0f);
     particle.Life = 1.0f;
     particle.Velocity = object.getVelocity() * 0.1f;
+}
+
+void ParticleGenerator::respawnAllParticles(glm::vec2 pos, glm::vec2 offset) {
+    for (unsigned int i = 0; i < this->amount; ++i)
+    {
+        Particle& particle = this->particles[i];
+        float randomy = (rand() % 10) / 10.0f;
+        float randx = ((rand() % 20) - 10) / 10.0f;
+        int sign = rand() % 100;
+        if (sign % 2 == 0) {
+            randx = randx * -1;
+        }
+        int signy = rand() % 100;
+        if (signy % 2 == 0) {
+            randomy = randomy * -1;
+        }
+        float rColor = 0.5f + ((rand() % 100) / 100.0f);
+       
+        particle.Position = (pos) + glm::vec2(randx, randomy);
+       
+        particle.Color = glm::vec4(rColor, rColor, rColor, 1.0f);
+        particle.Life = 5.0f;
+        float vel = (rand() % 10) / 100.f;
+        particle.Velocity = glm::vec2(randx,randomy) * vel;
+    }
 }

@@ -84,6 +84,7 @@ private:
 	int nextScene;
 	ParticleGenerator* Particles;
 	ParticleGenerator* Particles2;
+	ParticleGenerator* deathExplode;
 };
 
 

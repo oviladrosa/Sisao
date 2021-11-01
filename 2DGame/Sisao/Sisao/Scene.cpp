@@ -192,6 +192,12 @@ void Scene::init()
 		particleTex,
 		500
 	);
+
+	deathExplode = new ParticleGenerator(
+		particleSystem,
+		particleTex,
+		200
+	);
 }
 
 void Scene::Update(DWORD deltaTime)
@@ -240,7 +246,10 @@ void Scene::Update(DWORD deltaTime)
 /*	if (Game::instance().getKey(27)) {
 		ChangeState(CMenuState::GetInstance(m_pStateManager));
 	}*/
-	if (player->isDead() || mirrorPlayer->isDead()) Reset();
+	if (player->isDead() || mirrorPlayer->isDead()) { 
+		SoundEngine2->play2D("audio/dead-sound.wav", false);
+		Reset(); 
+	}
 
 	if (card1->isPlayerTouching(player->getPosition()) && card2->isPlayerTouching(mirrorPlayer->getPosition())) {
 		if (!finished) {
@@ -281,10 +290,11 @@ void Scene::Update(DWORD deltaTime)
 	for (Spike* s : spikeList) {
 		s->update(deltaTime);
 	}
-	checkSpikeCollisions();
+	checkSpikeCollisions(); 
 
 	Particles->Update(deltaTime, *player, 2, glm::vec2(2.0f));
 	Particles2->Update(deltaTime, *mirrorPlayer, 2, glm::vec2(2.0f));
+	deathExplode->easyUpdate(deltaTime);
 
 }
 
@@ -317,10 +327,10 @@ void Scene::Draw()
 		Particles->Draw(projection);
 	if (mirrorPlayer->getVelocity().x != 0.f && mirrorPlayer->getVelocity().y == 0.f)
 		Particles2->Draw(projection);
+	deathExplode->Draw(projection);
 }
 
 void Scene::Reset() {
-	SoundEngine2->play2D("audio/dead-sound.wav", false);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	mirrorPlayer->setPosition(glm::vec2(INIT_MIRROR_PLAYER_X_TILES * map->getTileSize(), INIT_MIRROR_PLAYER_Y_TILES * map->getTileSize()));
 	if (lever->isEnabled())
@@ -463,28 +473,44 @@ void Scene::addSpike(glm::vec2 pos, bool mirror) {
 void Scene::checkSpikeCollisions() {
 	for (Spike* s : spikeList) {
 		if (s->LeftCollision(player->getPosition(), glm::ivec2(32, 32))) {
+			deathExplode->respawnAllParticles(glm::vec2(player->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
 			Reset();
 		}
 		if (s->RightCollision(player->getPosition(), glm::ivec2(32, 32))) {
+			deathExplode->respawnAllParticles(glm::vec2(player->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
 			Reset();
 		}
 		if (s->UpperCollision(player->getPosition(), glm::ivec2(32, 32))) {
+			deathExplode->respawnAllParticles(glm::vec2(player->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
 			Reset();
 		}
 		if (s->BottomCollision(player->getPosition(), glm::ivec2(32, 32))) {
+			deathExplode->respawnAllParticles(glm::vec2(player->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
 			Reset();
 		}
 
 		if (s->LeftCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
+			deathExplode->respawnAllParticles(glm::vec2(mirrorPlayer->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
 			Reset();
 		}
 		if (s->RightCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
+			deathExplode->respawnAllParticles(glm::vec2(mirrorPlayer->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
 			Reset();
 		}
 		if (s->UpperCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
+			deathExplode->respawnAllParticles(glm::vec2(mirrorPlayer->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
 			Reset();
 		}
 		if (s->BottomCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
+			deathExplode->respawnAllParticles(glm::vec2(mirrorPlayer->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
 			Reset();
 		}
 	}
