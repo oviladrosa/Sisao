@@ -32,6 +32,11 @@ using namespace irrklang;
 
 ISoundEngine* SoundEngine2 = createIrrKlangDevice();
 
+unsigned int nr_particles = 500;
+unsigned int nr_new_particles = 2;
+
+
+
 Scene::Scene(CSceneManager* pManager)
 	: CGameScene(pManager)
 {
@@ -171,6 +176,22 @@ void Scene::init()
 	currentTime = 0.0f;
 	SoundEngine2->play2D("audio/gameloop.mp3", true);
 	finished = false;
+
+
+	ShaderProgram particleSystem = initializeParticleShader();
+	Texture particleTex;
+	particleTex.loadFromFile("images/dirt_01.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	Particles = new ParticleGenerator(
+		particleSystem,
+		particleTex,
+		500
+	);
+
+	Particles2 = new ParticleGenerator(
+		particleSystem,
+		particleTex,
+		500
+	);
 }
 
 void Scene::Update(DWORD deltaTime)
@@ -261,6 +282,10 @@ void Scene::Update(DWORD deltaTime)
 		s->update(deltaTime);
 	}
 	checkSpikeCollisions();
+
+	Particles->Update(deltaTime, *player, 2, glm::vec2(2.0f));
+	Particles2->Update(deltaTime, *mirrorPlayer, 2, glm::vec2(2.0f));
+
 }
 
 void Scene::Draw()
@@ -287,6 +312,11 @@ void Scene::Draw()
 	for (Spike* s : spikeList) s->render();
 	lever->render();
 	radiopool->renderTransparent();
+
+	if(player->getVelocity().x != 0.f && player->getVelocity().y == 0.f) 
+		Particles->Draw(projection);
+	if (mirrorPlayer->getVelocity().x != 0.f && mirrorPlayer->getVelocity().y == 0.f)
+		Particles2->Draw(projection);
 }
 
 void Scene::Reset() {
@@ -458,6 +488,37 @@ void Scene::checkSpikeCollisions() {
 			Reset();
 		}
 	}
+}
+
+ShaderProgram Scene::initializeParticleShader() {
+	ShaderProgram aux;
+	Shader vShader, fShader;
+
+	vShader.initFromFile(VERTEX_SHADER, "shaders/particle.vert");
+	if (!vShader.isCompiled())
+	{
+		cout << "Vertex Shader Error" << endl;
+		cout << "" << vShader.log() << endl << endl;
+	}
+	fShader.initFromFile(FRAGMENT_SHADER, "shaders/particle.frag");
+	if (!fShader.isCompiled())
+	{
+		cout << "Fragment Shader Error" << endl;
+		cout << "" << fShader.log() << endl << endl;
+	}
+	aux.init();
+	aux.addShader(vShader);
+	aux.addShader(fShader);
+	aux.link();
+	if (!aux.isLinked())
+	{
+		cout << "Shader Linking Error" << endl;
+		cout << "" << texProgram.log() << endl << endl;
+	}
+	aux.bindFragmentOutput("outColor");
+	vShader.free();
+	fShader.free();
+	return aux;
 }
 
 

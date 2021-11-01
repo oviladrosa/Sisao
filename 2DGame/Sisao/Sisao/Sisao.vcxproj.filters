@@ -29,6 +29,7 @@
     <ClCompile Include="CreditsState.cpp" />
     <ClCompile Include="Transporter.cpp" />
     <ClCompile Include="Spike.cpp" />
+    <ClCompile Include="ParticleGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimKeyframes.h" />
@@ -59,5 +60,6 @@
     <ClInclude Include="CreditsState.h" />
     <ClInclude Include="Transporter.h" />
     <ClInclude Include="Spike.h" />
+    <ClInclude Include="ParticleGenerator.h" />
   </ItemGroup>
 </Project>

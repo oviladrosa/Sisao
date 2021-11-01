@@ -30,6 +30,8 @@ public:
 	bool isMirror();
 	int getAnimation();
 	void setTransporterCollision(bool tc);
+	glm::vec2 getVelocity();
+	bool isTouchingGround();
 	
 private:
 	bool bJumping;
@@ -44,6 +46,7 @@ private:
 	ISoundEngine* SoundEnginePlayer;
 	bool demo;
 	bool transporterColl;
+	glm::vec2 velocityParticle;
 };
 
 

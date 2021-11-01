@@ -108,17 +108,18 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, bo
 	lastMove = 0;
 	demo = false;
 	transporterColl = false;
+	velocityParticle = glm::vec2(0.f);
 }
 
 void Player::update(int deltaTime)
 {
 	sprite->update(deltaTime);
 	if (!demo) {
-
 		
 		if(Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 		{
 			lastMove = 0;
+			velocityParticle = glm::vec2(-0.2f, velocityParticle.y);
 			if(sprite->animation() != MOVE_LEFT && !bJumping)
 				sprite->changeAnimation(MOVE_LEFT);
 			posPlayer.x -= 2;
@@ -130,6 +131,7 @@ void Player::update(int deltaTime)
 		}
 		else if(Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 		{
+			velocityParticle = glm::vec2(0.2f, velocityParticle.y);
 			lastMove = 0;
 			if(sprite->animation() != MOVE_RIGHT && !bJumping)
 				sprite->changeAnimation(MOVE_RIGHT);
@@ -141,7 +143,7 @@ void Player::update(int deltaTime)
 			}
 		}
 		else if (lastMove > 100) {
-		
+			
 			if (sprite->animation() == STAND_LEFT) {
 				sprite->changeAnimation(IDLE_LEFT);
 			}
@@ -152,10 +154,14 @@ void Player::update(int deltaTime)
 		else
 		{
 			lastMove++;
-			if(sprite->animation() == MOVE_LEFT)
+			if (sprite->animation() == MOVE_LEFT) {
+				velocityParticle = glm::vec2(0.00f, velocityParticle.y);
 				sprite->changeAnimation(STAND_LEFT);
-			else if(sprite->animation() == MOVE_RIGHT)
+			}
+			else if (sprite->animation() == MOVE_RIGHT) {
+				velocityParticle = glm::vec2(0.00f, velocityParticle.y);
 				sprite->changeAnimation(STAND_RIGHT);
+			}
 		}
 	
 		if(bJumping)
@@ -166,6 +172,7 @@ void Player::update(int deltaTime)
 				if (map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y))
 				{
 					jumpAngle = 180;
+					velocityParticle.y = 0.f;
 				}
 				if (jumpAngle < 45 && transporterColl) {
 					transporterColl = false;
@@ -191,16 +198,18 @@ void Player::update(int deltaTime)
 				{
 					bJumping = false;
 					posPlayer.y = startY;
+					velocityParticle.y = 0.f;
 				}
 				else if (jumpAngle > 90 && transporterColl) {
 					bJumping = false;
+					velocityParticle.y = 0.f;
 				}
 				else
 				{
 					posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
 					if (jumpAngle > 90)
 						bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
-					
+						if(!bJumping)velocityParticle.y = 0.f;
 				}
 			}
 			else {
@@ -208,6 +217,7 @@ void Player::update(int deltaTime)
 				if (map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y))
 				{
 					jumpAngle = 180;
+					velocityParticle.y = 0.f;
 				}
 				if (jumpAngle < 45 && transporterColl) {
 					transporterColl = false;
@@ -232,16 +242,18 @@ void Player::update(int deltaTime)
 				{
 					bJumping = false;
 					posPlayer.y = startY;
+					velocityParticle.y = 0.f;
 				}
 				else if (jumpAngle > 90 && transporterColl) {
 					bJumping = false;
+					velocityParticle.y = 0.f;
 				}
 				else
 				{
 					posPlayer.y = int(startY + JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
 					if (jumpAngle > 90)
 						bJumping = !map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
-				
+						if (!bJumping)velocityParticle.y = 0.f;
 
 				}
 			}
@@ -268,6 +280,7 @@ void Player::update(int deltaTime)
 					{
 						bJumping = true;
 						transporterColl = false;
+						velocityParticle.y = -2.f;
 						jumpAngle = 0;
 						startY = posPlayer.y;
 						lastMove = 0;
@@ -308,6 +321,7 @@ void Player::update(int deltaTime)
 					{
 						bJumping = true;
 						transporterColl = false;
+						velocityParticle.y = 2.f;
 						jumpAngle = 0;
 						startY = posPlayer.y;
 						lastMove = 0;
@@ -390,6 +404,19 @@ int Player::getAnimation() {
 
 void Player::setTransporterCollision(bool tc) {
 	transporterColl = tc;
+}
+
+glm::vec2 Player::getVelocity() {
+	return velocityParticle;
+}
+
+bool Player::isTouchingGround() {
+	if (!mirror) {
+		return map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
+	}
+	else {
+		return map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
+	}
 }
 
 

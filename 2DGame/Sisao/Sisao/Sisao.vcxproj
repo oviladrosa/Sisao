@@ -23,6 +23,7 @@
     <ClInclude Include="Lever.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="ParticleGenerator.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
@@ -53,6 +54,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="Obstacle.cpp" />
+    <ClCompile Include="ParticleGenerator.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />

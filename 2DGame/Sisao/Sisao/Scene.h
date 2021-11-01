@@ -19,6 +19,7 @@
 #include "Lever.h"
 #include "Transporter.h"
 #include "GameState.h"
+#include "ParticleGenerator.h"
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
@@ -49,6 +50,7 @@ public:
 	void checkTransporterCollisions();
 	void addSpike(glm::vec2 pos, bool mirror);
 	void checkSpikeCollisions();
+	ShaderProgram initializeParticleShader();
 
 private:
 	void initShaders();
@@ -80,6 +82,8 @@ private:
 	glm::ivec2 playerPostion;
 	glm::ivec2 mirrorplayerPostion;
 	int nextScene;
+	ParticleGenerator* Particles;
+	ParticleGenerator* Particles2;
 };
 
 
