@@ -18,6 +18,7 @@ static int prevTime;
 static void keyboardDownCallback(unsigned char key, int x, int y)
 {
 	Game::instance().keyPressed(key);
+	std::cout << key << "\n";
 }
 
 // If a key is released this callback is called
