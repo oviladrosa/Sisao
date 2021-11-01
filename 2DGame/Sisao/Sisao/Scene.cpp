@@ -261,6 +261,8 @@ void Scene::Update(DWORD deltaTime)
 		Reset(); 
 	}
 
+
+
 	if (card1->isPlayerTouching(player->getPosition()) && card2->isPlayerTouching(mirrorPlayer->getPosition())) {
 		if (!finished) {
 			card1->changeAnimation(1);
@@ -272,6 +274,9 @@ void Scene::Update(DWORD deltaTime)
 	Particles->Update(deltaTime, *player, 2, glm::vec2(2.0f));
 	Particles2->Update(deltaTime, *mirrorPlayer, 2, glm::vec2(2.0f));
 	deathExplode->easyUpdate(deltaTime);
+
+	for (Transporter* t : transporterList)
+		t->update(deltaTime);
 
 	checkWallCollisions();
 	checkBoxCollisions();
@@ -550,12 +555,13 @@ void Scene::checkBoxCollisions()
 			{
 				player->setPosition(glm::vec2(player->getPosition().x + 1, player->getPosition().y));
 				box->setPosition(glm::vec2(box->getPosition().x - 3, box->getPosition().y));
+				box->setLastDirection(false);
 			}
 			else
 			{
 				player->setPosition(glm::vec2(player->getPosition().x + 3, player->getPosition().y));
 			}
-			if (box->isFalling()) box->setPosition(glm::vec2(box->getPosition().x - 1, box->getPosition().y));
+			//if (box->isFalling()) box->setPosition(glm::vec2(box->getPosition().x - 1, box->getPosition().y));
 		}
 		if (box->LeftCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32)))
 		{
@@ -563,12 +569,13 @@ void Scene::checkBoxCollisions()
 			{
 				mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x + 1, mirrorPlayer->getPosition().y));
 				box->setPosition(glm::vec2(box->getPosition().x - 3, box->getPosition().y));
+				box->setLastDirection(false);
 			}
 			else
 			{
 				mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x + 3, mirrorPlayer->getPosition().y));
 			}
-			if (box->isFalling()) box->setPosition(glm::vec2(box->getPosition().x - 1, box->getPosition().y));
+			//if (box->isFalling()) box->setPosition(glm::vec2(box->getPosition().x - 1, box->getPosition().y));
 		}
 		if (box->RightCollision(player->getPosition(), glm::ivec2(32, 32)))
 		{
@@ -576,12 +583,13 @@ void Scene::checkBoxCollisions()
 			{
 				player->setPosition(glm::vec2(player->getPosition().x - 1, player->getPosition().y));
 				box->setPosition(glm::vec2(box->getPosition().x + 3, box->getPosition().y));
+				box->setLastDirection(true);
 			}
 			else
 			{
 				player->setPosition(glm::vec2(player->getPosition().x - 3, player->getPosition().y));
 			}
-			if (box->isFalling()) box->setPosition(glm::vec2(box->getPosition().x + 1, box->getPosition().y));
+			//if (box->isFalling()) box->setPosition(glm::vec2(box->getPosition().x + 1, box->getPosition().y));
 		}
 		if (box->RightCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32)))
 		{
@@ -589,13 +597,15 @@ void Scene::checkBoxCollisions()
 			{
 				mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x - 1, mirrorPlayer->getPosition().y));
 				box->setPosition(glm::vec2(box->getPosition().x + 3, box->getPosition().y));
+				box->setLastDirection(true);
 			}
 			else
 			{
 				mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x - 3, mirrorPlayer->getPosition().y));
 			}
-			if (box->isFalling()) box->setPosition(glm::vec2(box->getPosition().x + 1, box->getPosition().y));
+			//if (box->isFalling()) box->setPosition(glm::vec2(box->getPosition().x + 1, box->getPosition().y));
 		}
+
 		if (box->BottomCollision(player->getPosition(), glm::ivec2(32, 32), &posY))
 		{
 			player->setPosition(glm::vec2(player->getPosition().x, posY));
@@ -608,6 +618,7 @@ void Scene::checkBoxCollisions()
 			box->setPosition(glm::vec2(box->getPosition().x, box->getPosition().y));
 			mirrorPlayer->setTransporterCollision(true);
 		}
+		
 	}
 }
 

@@ -33,6 +33,7 @@ void Box::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 	tileMapDispl = tileMapPos;
 	initialPosition = glm::vec2(float(tileMapDispl.x + initialPosition.x), float(tileMapDispl.y + initialPosition.y));
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + initialPosition.x), float(tileMapDispl.y + initialPosition.y)));
+	lastDirection = true;
 }
 
 void Box::update(int deltaTime)
@@ -44,78 +45,45 @@ void Box::update(int deltaTime)
 
 	if (map->collisionObstacleMoveLeft(posObstacle, glm::ivec2(32, 32)))
 	{
-		posObstacle.x += 3;
+		posObstacle.x += 2;
 		collisioning = true;
 	}
 	if (map->collisionObstacleMoveRight(posObstacle, glm::ivec2(32, 32)))
 	{
-		posObstacle.x -= 3;
+		posObstacle.x -= 2;
 		collisioning = true;
 	}
 	
-	if (falling)
-	{
-		if (!this->mirror) {
-			collisionAngle += JUMP_ANGLE_STEP;
-			if (map->collisionObstacleMoveUp(posObstacle, glm::ivec2(32, 32), &posObstacle.y))
-			{
-				collisionAngle = 90;
-			}
-			if (collisionAngle >= 90)
-			{
-				falling = false;
-				posObstacle.y = startY;
-			}
-			else
-			{
-				if (collisionAngle > 45)
-					falling = !map->collisionObstacleMoveDown(posObstacle, glm::ivec2(32, 32), &posObstacle.y);
-			}
+	if (!this->mirror) {
+		bool coll = map->collisionObstacleMoveDown(posObstacle, glm::ivec2(32, 32));
+		if (coll) {
+			posObstacle.y -= 4;
+		}
+		else if (posObstacle.y > 235) {
+			posObstacle.y -= 4;
 		}
 		else {
-			collisionAngle += JUMP_ANGLE_STEP;
-			if (map->collisionObstacleMoveDown(posObstacle, glm::ivec2(32, 32), &posObstacle.y))
-			{
-				collisionAngle = 90;
-			}
-			if (collisionAngle >= 90)
-			{
-				falling = false;
-				posObstacle.y = startY;
-			}
+			if (!lastDirection)
+				posObstacle.x -= 2;
 			else
-			{
-				if (collisionAngle > 45)
-					falling = !map->collisionObstacleMoveUp(posObstacle, glm::ivec2(32, 32), &posObstacle.y);
-			}
+				posObstacle.x += 2;
 		}
 	}
-	else
-	{
-		if (!this->mirror) {
-			if (!map->collisionObstacleMoveDown(posObstacle, glm::ivec2(32, 32), &posObstacle.y))
-			{
-				falling = true;
-				collisionAngle = 0;
-				startY = posObstacle.y;
-			}
-			if (posObstacle.y > 260) {
-				posObstacle.y = 256;
-			}
+	else {
+		if (map->collisionObstacleMoveUp(posObstacle, glm::ivec2(32, 32))) {
+			posObstacle.y += 4;
+		}
+		else if (posObstacle.y < 235) {
+			posObstacle.y += 4;
 		}
 		else {
-			if (!map->collisionObstacleMoveUp(posObstacle, glm::ivec2(32, 32), &posObstacle.y))
-			{
-				falling = true;
-				collisionAngle = 0;
-				startY = posObstacle.y;
-			}
-			if (posObstacle.y < 284) {
-				posObstacle.y = 288;
-			}
+			if (!lastDirection)
+				posObstacle.x -= 2;
+			else
+				posObstacle.x += 2;
 		}
 	}
-	//sprite->setPosition(glm::vec2(float(tileMapDispl.x + posObstacle.x), float(tileMapDispl.y + posObstacle.y)));
+	sprite->setPosition(glm::vec2(float(posObstacle.x), float(posObstacle.y)));
 }
 
 void Box::render()
@@ -222,4 +190,8 @@ bool Box::isMirror()
 void Box::setMirror(bool isBoxMirror)
 {
 	mirror = isBoxMirror;
+}
+
+void Box::setLastDirection(bool ld) {
+	lastDirection = ld;
 }

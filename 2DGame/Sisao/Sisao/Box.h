@@ -26,12 +26,14 @@ public:
 	bool RightCollision(const glm::ivec2& posCollider, const glm::ivec2& size);
 	bool UpperCollision(const glm::ivec2& posCollider, const glm::ivec2& size, int* posY);
 	bool BottomCollision(const glm::ivec2& posCollider, const glm::ivec2& size, int* posY);
+	void setLastDirection(bool ld);
 
 private:
 	bool mirror;
 	bool falling;
 	bool collisioning;
 	int collisionAngle, startY;
+	bool lastDirection;
 
 };
 
