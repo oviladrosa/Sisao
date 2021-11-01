@@ -269,15 +269,14 @@ void Scene::Update(DWORD deltaTime)
 		}
 	}
 
-	checkWallCollisions();
-	checkBoxCollisions();
-	
-}
-
 	Particles->Update(deltaTime, *player, 2, glm::vec2(2.0f));
 	Particles2->Update(deltaTime, *mirrorPlayer, 2, glm::vec2(2.0f));
 	deathExplode->easyUpdate(deltaTime);
 
+	checkWallCollisions();
+	checkBoxCollisions();
+	checkSpikeCollisions();
+	
 }
 
 void Scene::Draw()
