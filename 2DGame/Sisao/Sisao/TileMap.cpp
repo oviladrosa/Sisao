@@ -270,8 +270,8 @@ bool TileMap::collisionObstacleMoveDown(const glm::ivec2& pos, const glm::ivec2&
 {
 	int x0, x1, y;
 
-	x0 = (pos.x) / tileSize;
-	x1 = (pos.x + size.x) / tileSize;
+	x0 = (pos.x + 2) / tileSize;
+	x1 = (pos.x + size.x - 2) / tileSize;
 	y = (pos.y + size.y - 1) / tileSize;
 	for (int x = x0; x <= x1; x++)
 	{
@@ -290,8 +290,8 @@ bool TileMap::collisionObstacleMoveUp(const glm::ivec2& pos, const glm::ivec2& s
 {
 	int x0, x1, y;
 
-	x0 = (pos.x) / tileSize;
-	x1 = (pos.x + size.x) / tileSize;
+	x0 = (pos.x + 2) / tileSize;
+	x1 = (pos.x + size.x - 2) / tileSize;
 	y = (pos.y) / tileSize;
 	for (int x = x0; x <= x1; x++)
 	{
