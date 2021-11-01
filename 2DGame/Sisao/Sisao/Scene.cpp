@@ -555,7 +555,7 @@ void Scene::checkBoxCollisions()
 			{
 				player->setPosition(glm::vec2(player->getPosition().x + 3, player->getPosition().y));
 			}
-			//if (box->isFalling()) box->setPosition(glm::vec2(box->getPosition().x - 1, box->getPosition().y));
+			if (box->isFalling()) box->setPosition(glm::vec2(box->getPosition().x - 1, box->getPosition().y));
 		}
 		if (box->LeftCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32)))
 		{
@@ -568,7 +568,7 @@ void Scene::checkBoxCollisions()
 			{
 				mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x + 3, mirrorPlayer->getPosition().y));
 			}
-			//if (box->isFalling()) box->setPosition(glm::vec2(box->getPosition().x - 1, box->getPosition().y));
+			if (box->isFalling()) box->setPosition(glm::vec2(box->getPosition().x - 1, box->getPosition().y));
 		}
 		if (box->RightCollision(player->getPosition(), glm::ivec2(32, 32)))
 		{
@@ -581,7 +581,7 @@ void Scene::checkBoxCollisions()
 			{
 				player->setPosition(glm::vec2(player->getPosition().x - 3, player->getPosition().y));
 			}
-			//if (box->isFalling()) box->setPosition(glm::vec2(box->getPosition().x + 1, box->getPosition().y));
+			if (box->isFalling()) box->setPosition(glm::vec2(box->getPosition().x + 1, box->getPosition().y));
 		}
 		if (box->RightCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32)))
 		{
@@ -594,17 +594,19 @@ void Scene::checkBoxCollisions()
 			{
 				mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x - 3, mirrorPlayer->getPosition().y));
 			}
-			//if (box->isFalling()) box->setPosition(glm::vec2(box->getPosition().x + 1, box->getPosition().y));
+			if (box->isFalling()) box->setPosition(glm::vec2(box->getPosition().x + 1, box->getPosition().y));
 		}
 		if (box->BottomCollision(player->getPosition(), glm::ivec2(32, 32), &posY))
 		{
 			player->setPosition(glm::vec2(player->getPosition().x, posY));
 			box->setPosition(glm::vec2(box->getPosition().x, box->getPosition().y));
+			player->setTransporterCollision(true);
 		}
-		if (box->BottomCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32), &posY))
+		if (box->UpperCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32), &posY))
 		{
 			mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x, posY));
 			box->setPosition(glm::vec2(box->getPosition().x, box->getPosition().y));
+			mirrorPlayer->setTransporterCollision(true);
 		}
 	}
 }
