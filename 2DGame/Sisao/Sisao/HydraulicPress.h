@@ -18,10 +18,10 @@ public:
 	void setPosition(const glm::vec2& pos);
 	bool isPlayerTouching(glm::vec2& posPlayer);
 	
-	bool LeftCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const;
-	bool RightCollision(const glm::ivec2& posCollider, const glm::ivec2& size) const;
-	bool UpperCollision(const glm::ivec2& posCollider, const glm::ivec2& size, int* posY) const;
-	bool BottomCollision(const glm::ivec2& posCollider, const glm::ivec2& size, int* posY) const;
+	bool LeftCollision(const glm::ivec2& posCollider, const glm::ivec2& size);
+	bool RightCollision(const glm::ivec2& posCollider, const glm::ivec2& size);
+	bool UpperCollision(const glm::ivec2& posCollider, const glm::ivec2& size, int* posY);
+	bool BottomCollision(const glm::ivec2& posCollider, const glm::ivec2& size, int* posY);
 };
 
 #endif	//_HYDRAULICPRESS_H

@@ -25,8 +25,10 @@ using namespace irrklang;
 #define INIT_WALL1_Y_TILES 6
 #define INIT_WALL2_X_TILES 25
 #define INIT_WALL2_Y_TILES 7
-#define INIT_BOX_X_TILES 7
+#define INIT_BOX_X_TILES 8
 #define INIT_BOX_Y_TILES 6
+#define INIT_BOX2_X_TILES 9
+#define INIT_BOX2_Y_TILES 9
 #define INIT_LEVER_X_TILES 36 
 #define INIT_LEVER_Y_TILES 7
 
@@ -134,7 +136,15 @@ void Scene::init()
 	box->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	box->setPosition(glm::vec2(INIT_BOX_X_TILES * map->getTileSize(), INIT_BOX_Y_TILES * map->getTileSize()));
 	box->setTileMap(map);
+	box->setMirror(false);
 	boxList.push_back(box);
+
+	Box* box2 = new Box();
+	box2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	box2->setPosition(glm::vec2(INIT_BOX2_X_TILES * map->getTileSize(), INIT_BOX2_Y_TILES * map->getTileSize()));
+	box2->setTileMap(map);
+	box2->setMirror(true);
+	boxList.push_back(box2);
 
 	Wall* wall = new Wall();
 	wall->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -218,66 +228,9 @@ void Scene::Update(DWORD deltaTime)
 		}
 	}
 
-	for (Wall* wall : wallList)
-	{
-		
-		if (wall->LeftCollision(player->getPosition(), glm::ivec2(32, 32)))
-		{
-			player->setPosition(glm::vec2(player->getPosition().x + 2, player->getPosition().y));
-			player->forceAnimation(0); //STAND_LEFT
-		}
-		else if (wall->LeftCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32)))
-		{
-			mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x + 2, mirrorPlayer->getPosition().y));
-			mirrorPlayer->forceAnimation(0); //STAND_LEFT
-		}
-		if (wall->RightCollision(player->getPosition(), glm::ivec2(32, 32)))
-		{
-			player->setPosition(glm::vec2(player->getPosition().x - 2, player->getPosition().y));
-			player->forceAnimation(1); //STAND_RIGHT
-		}
-		else if (wall->RightCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32)))
-		{
-			mirrorPlayer->setPosition(glm::vec2(player->getPosition().x - 2, player->getPosition().y));
-			mirrorPlayer->forceAnimation(1); //STAND_RIGHT
-		}
-	}
+	checkWallCollisions();
+	checkBoxCollisions();
 	
-	for (Box* box : boxList)
-	{
-		int posY;
-		
-		if (box->LeftCollision(player->getPosition(), glm::ivec2(32, 32)))
-		{
-			player->setPosition(glm::vec2(player->getPosition().x + 0.5, player->getPosition().y));
-			box->setPosition(glm::vec2(box->getPosition().x - 2.5, box->getPosition().y));
-		}
-		if (box->LeftCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32)))
-		{
-			mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x + 0.5, mirrorPlayer->getPosition().y));
-			box->setPosition(glm::vec2(box->getPosition().x - 2.5, box->getPosition().y));
-		}
-		if (box->RightCollision(player->getPosition(), glm::ivec2(32, 32)))
-		{
-			player->setPosition(glm::vec2(player->getPosition().x - 0.5, player->getPosition().y));
-			box->setPosition(glm::vec2(box->getPosition().x + 2.5, box->getPosition().y));			
-		}
-		if (box->RightCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32)))
-		{
-			mirrorPlayer->setPosition(glm::vec2(player->getPosition().x - 0.5, player->getPosition().y));
-			box->setPosition(glm::vec2(box->getPosition().x + 2.5, box->getPosition().y));
-		}
-		if (box->BottomCollision(player->getPosition(), glm::ivec2(32, 32), &posY))
-		{
-			player->setPosition(glm::vec2(player->getPosition().x, posY));
-			box->setPosition(glm::vec2(box->getPosition().x, box->getPosition().y));
-		}
-		if (box->BottomCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32), &posY))
-		{
-			mirrorPlayer->setPosition(glm::vec2(player->getPosition().x, posY));
-			box->setPosition(glm::vec2(box->getPosition().x, box->getPosition().y));
-		}
-	}
 }
 
 void Scene::Draw()
@@ -319,8 +272,16 @@ void Scene::Reset() {
 		}
 	}
 	//cuidado aqui, tenemos que sustituir cada posicion inicial en su respectivo box.
+	int i = 1;
 	for (Box* box : boxList)
-		box->setPosition(glm::vec2(INIT_BOX_X_TILES * map->getTileSize(), INIT_BOX_Y_TILES * map->getTileSize()));
+	{
+		if(i == 1)
+			box->setPosition(glm::vec2(INIT_BOX_X_TILES * map->getTileSize(), INIT_BOX_Y_TILES * map->getTileSize()));
+		else 
+			box->setPosition(glm::vec2(INIT_BOX2_X_TILES * map->getTileSize(), INIT_BOX2_Y_TILES * map->getTileSize()));
+		++i;
+	}
+	
 	player->setPosition(glm::vec2(playerPostion.x * map->getTileSize(), playerPostion.y * map->getTileSize()));
 	mirrorPlayer->setPosition(glm::vec2(mirrorplayerPostion.x * map->getTileSize(), mirrorplayerPostion.y * map->getTileSize()));
 	finished = false;
@@ -394,6 +355,105 @@ int Scene::getNextScene() {
 
 bool Scene::isFinished() {
 	return finished;
+}
+
+void Scene::checkBoxCollisions()
+{
+	for (Box* box : boxList)
+	{
+		int posY;
+
+		if (box->LeftCollision(player->getPosition(), glm::ivec2(32, 32)))
+		{
+			if (!box->isCollisioning())
+			{
+				player->setPosition(glm::vec2(player->getPosition().x + 1, player->getPosition().y));
+				box->setPosition(glm::vec2(box->getPosition().x - 3, box->getPosition().y));
+			}
+			else
+			{
+				player->setPosition(glm::vec2(player->getPosition().x + 3, player->getPosition().y));
+			}
+			//if (box->isFalling()) box->setPosition(glm::vec2(box->getPosition().x - 1, box->getPosition().y));
+		}
+		if (box->LeftCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32)))
+		{
+			if (!box->isCollisioning())
+			{
+				mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x + 1, mirrorPlayer->getPosition().y));
+				box->setPosition(glm::vec2(box->getPosition().x - 3, box->getPosition().y));
+			}
+			else
+			{
+				mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x + 3, mirrorPlayer->getPosition().y));
+			}
+			//if (box->isFalling()) box->setPosition(glm::vec2(box->getPosition().x - 1, box->getPosition().y));
+		}
+		if (box->RightCollision(player->getPosition(), glm::ivec2(32, 32)))
+		{
+			if (!box->isCollisioning())
+			{
+				player->setPosition(glm::vec2(player->getPosition().x - 1, player->getPosition().y));
+				box->setPosition(glm::vec2(box->getPosition().x + 3, box->getPosition().y));
+			}
+			else
+			{
+				player->setPosition(glm::vec2(player->getPosition().x - 3, player->getPosition().y));
+			}
+			//if (box->isFalling()) box->setPosition(glm::vec2(box->getPosition().x + 1, box->getPosition().y));
+		}
+		if (box->RightCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32)))
+		{
+			if (!box->isCollisioning())
+			{
+				mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x - 1, mirrorPlayer->getPosition().y));
+				box->setPosition(glm::vec2(box->getPosition().x + 3, box->getPosition().y));
+			}
+			else
+			{
+				mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x - 3, mirrorPlayer->getPosition().y));
+			}
+			//if (box->isFalling()) box->setPosition(glm::vec2(box->getPosition().x + 1, box->getPosition().y));
+		}
+		if (box->BottomCollision(player->getPosition(), glm::ivec2(32, 32), &posY))
+		{
+			player->setPosition(glm::vec2(player->getPosition().x, posY));
+			box->setPosition(glm::vec2(box->getPosition().x, box->getPosition().y));
+		}
+		if (box->BottomCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32), &posY))
+		{
+			mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x, posY));
+			box->setPosition(glm::vec2(box->getPosition().x, box->getPosition().y));
+		}
+	}
+}
+
+void Scene::checkWallCollisions()
+{
+	for (Wall* wall : wallList)
+	{
+
+		if (wall->LeftCollision(player->getPosition(), glm::ivec2(32, 32)))
+		{
+			player->setPosition(glm::vec2(player->getPosition().x + 2, player->getPosition().y));
+			player->forceAnimation(0); //STAND_LEFT
+		}
+		else if (wall->LeftCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32)))
+		{
+			mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x + 2, mirrorPlayer->getPosition().y));
+			mirrorPlayer->forceAnimation(0); //STAND_LEFT
+		}
+		if (wall->RightCollision(player->getPosition(), glm::ivec2(32, 32)))
+		{
+			player->setPosition(glm::vec2(player->getPosition().x - 2, player->getPosition().y));
+			player->forceAnimation(1); //STAND_RIGHT
+		}
+		else if (wall->RightCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32)))
+		{
+			mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x - 2, mirrorPlayer->getPosition().y));
+			mirrorPlayer->forceAnimation(1); //STAND_RIGHT
+		}
+	}
 }
 
 

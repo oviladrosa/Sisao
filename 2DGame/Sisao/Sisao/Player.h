@@ -29,6 +29,7 @@ public:
 	void forceAnimation(int a);
 	bool isMirror();
 	bool isJumping();
+	void setJumping(bool jump);
 	
 private:
 	bool bJumping;

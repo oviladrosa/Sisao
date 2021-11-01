@@ -40,6 +40,8 @@ public:
 	void setcard2Postion(glm::vec2 pos);
 	void setplayerPostion(glm::ivec2 pos);
 	void setmirrorplayerPostion(glm::ivec2 pos);
+	void checkWallCollisions();
+	void checkBoxCollisions();
 	void setNextScene(int x);
 	bool isFinished();
 	int getNextScene();
