@@ -8,6 +8,7 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "Card.h"
+#include "Spike.h"
 
 #include "GameScene.h"
 #include "SceneManager.h"
@@ -16,7 +17,9 @@
 #include "Box.h"
 #include "Wall.h"
 #include "Lever.h"
+#include "Transporter.h"
 #include "GameState.h"
+#include "ParticleGenerator.h"
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
@@ -45,6 +48,11 @@ public:
 	void setNextScene(int x);
 	bool isFinished();
 	int getNextScene();
+	void addTransporter(glm::vec2 pos, bool left);
+	void checkTransporterCollisions();
+	void addSpike(glm::vec2 pos, bool mirror);
+	void checkSpikeCollisions();
+	ShaderProgram initializeParticleShader();
 
 private:
 	void initShaders();
@@ -59,6 +67,8 @@ private:
 	list<Box*> boxList;
 	list<Wall*> wallList;
 	list<Wall*> wallListAux;
+	list<Transporter*> transporterList;
+	list<Spike*> spikeList;
 	Lever* lever;
 	Texture bgText;
 	ShaderProgram texProgram;
@@ -74,6 +84,9 @@ private:
 	glm::ivec2 playerPostion;
 	glm::ivec2 mirrorplayerPostion;
 	int nextScene;
+	ParticleGenerator* Particles;
+	ParticleGenerator* Particles2;
+	ParticleGenerator* deathExplode;
 };
 
 

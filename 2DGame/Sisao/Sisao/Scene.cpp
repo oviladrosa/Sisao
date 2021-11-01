@@ -34,6 +34,11 @@ using namespace irrklang;
 
 ISoundEngine* SoundEngine2 = createIrrKlangDevice();
 
+unsigned int nr_particles = 500;
+unsigned int nr_new_particles = 2;
+
+
+
 Scene::Scene(CSceneManager* pManager)
 	: CGameScene(pManager)
 {
@@ -47,6 +52,8 @@ Scene::Scene(CSceneManager* pManager)
 	boxList = list<Box*>();
 	wallList = list<Wall*>();
 	wallListAux = list<Wall*>();
+	transporterList = list<Transporter*>();
+	spikeList = list<Spike*>();
 	lever = NULL;
 }
 
@@ -77,6 +84,14 @@ Scene::~Scene()
 	if (!boxList.empty()) {
 		for (Box* box : boxList) delete box;
 		boxList.clear();
+	}
+	if (!transporterList.empty()) {
+		for (Transporter* trans: transporterList) delete trans;
+		transporterList.clear();
+	}
+	if (!spikeList.empty()) {
+		for (Spike* sp : spikeList) delete sp;
+		spikeList.clear();
 	}
 	if (lever != NULL)
 		delete lever;
@@ -171,11 +186,34 @@ void Scene::init()
 	currentTime = 0.0f;
 	SoundEngine2->play2D("audio/gameloop.mp3", true);
 	finished = false;
+
+
+	ShaderProgram particleSystem = initializeParticleShader();
+	Texture particleTex;
+	particleTex.loadFromFile("images/dirt_01.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	Particles = new ParticleGenerator(
+		particleSystem,
+		particleTex,
+		500
+	);
+
+	Particles2 = new ParticleGenerator(
+		particleSystem,
+		particleTex,
+		500
+	);
+
+	deathExplode = new ParticleGenerator(
+		particleSystem,
+		particleTex,
+		200
+	);
 }
 
 void Scene::Update(DWORD deltaTime)
 {
 	currentTime += deltaTime;
+	checkTransporterCollisions();
 	if (!finished) {
 		player->update(deltaTime);
 		mirrorPlayer->update(deltaTime);
@@ -218,7 +256,10 @@ void Scene::Update(DWORD deltaTime)
 /*	if (Game::instance().getKey(27)) {
 		ChangeState(CMenuState::GetInstance(m_pStateManager));
 	}*/
-	if (player->isDead() || mirrorPlayer->isDead()) Reset();
+	if (player->isDead() || mirrorPlayer->isDead()) { 
+		SoundEngine2->play2D("audio/dead-sound.wav", false);
+		Reset(); 
+	}
 
 	if (card1->isPlayerTouching(player->getPosition()) && card2->isPlayerTouching(mirrorPlayer->getPosition())) {
 		if (!finished) {
@@ -231,6 +272,12 @@ void Scene::Update(DWORD deltaTime)
 	checkWallCollisions();
 	checkBoxCollisions();
 	
+}
+
+	Particles->Update(deltaTime, *player, 2, glm::vec2(2.0f));
+	Particles2->Update(deltaTime, *mirrorPlayer, 2, glm::vec2(2.0f));
+	deathExplode->easyUpdate(deltaTime);
+
 }
 
 void Scene::Draw()
@@ -253,12 +300,19 @@ void Scene::Draw()
 	hammer->render();
 	for(Wall* wall : wallList) wall->render();
 	for(Box* box : boxList) box->render();
+	for (Transporter* t : transporterList) t->render();
+	for (Spike* s : spikeList) s->render();
 	lever->render();
 	radiopool->renderTransparent();
+
+	if(player->getVelocity().x != 0.f && player->getVelocity().y == 0.f) 
+		Particles->Draw(projection);
+	if (mirrorPlayer->getVelocity().x != 0.f && mirrorPlayer->getVelocity().y == 0.f)
+		Particles2->Draw(projection);
+	deathExplode->Draw(projection);
 }
 
 void Scene::Reset() {
-	SoundEngine2->play2D("audio/dead-sound.wav", false);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	mirrorPlayer->setPosition(glm::vec2(INIT_MIRROR_PLAYER_X_TILES * map->getTileSize(), INIT_MIRROR_PLAYER_Y_TILES * map->getTileSize()));
 	if (lever->isEnabled())
@@ -292,13 +346,13 @@ void Scene::initShaders()
 	Shader vShader, fShader;
 
 	vShader.initFromFile(VERTEX_SHADER, "shaders/texture.vert");
-	if(!vShader.isCompiled())
+	if (!vShader.isCompiled())
 	{
 		cout << "Vertex Shader Error" << endl;
 		cout << "" << vShader.log() << endl << endl;
 	}
 	fShader.initFromFile(FRAGMENT_SHADER, "shaders/texture.frag");
-	if(!fShader.isCompiled())
+	if (!fShader.isCompiled())
 	{
 		cout << "Fragment Shader Error" << endl;
 		cout << "" << fShader.log() << endl << endl;
@@ -307,7 +361,7 @@ void Scene::initShaders()
 	texProgram.addShader(vShader);
 	texProgram.addShader(fShader);
 	texProgram.link();
-	if(!texProgram.isLinked())
+	if (!texProgram.isLinked())
 	{
 		cout << "Shader Linking Error" << endl;
 		cout << "" << texProgram.log() << endl << endl;
@@ -317,7 +371,7 @@ void Scene::initShaders()
 	fShader.free();
 }
 
-void Scene::EnterScene(){
+void Scene::EnterScene() {
 	SoundEngine2->play2D("audio/gameloop.mp3", true);
 }
 
@@ -356,6 +410,134 @@ int Scene::getNextScene() {
 bool Scene::isFinished() {
 	return finished;
 }
+
+void Scene::addTransporter(glm::vec2 pos, bool left) {
+	Transporter* transporter = new Transporter();
+	transporter->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	transporter->setTileMap(map);
+	transporter->setPosition(glm::vec2(pos.x * map->getTileSize(), pos.y * map->getTileSize()));
+	transporter->setDirection(left);
+	transporterList.push_back(transporter);
+}
+
+void Scene::checkTransporterCollisions() {
+	for (Transporter* trans : transporterList) {
+		if (trans->LeftCollision(player->getPosition(), glm::ivec2(32, 32))) {
+			player->setPosition(glm::vec2(player->getPosition().x + 2, player->getPosition().y));
+		}
+		if (trans->RightCollision(player->getPosition(), glm::ivec2(32, 32))) {
+			player->setPosition(glm::vec2(player->getPosition().x - 2, player->getPosition().y));
+		}
+		if (trans->UpperCollision(player->getPosition(), glm::ivec2(32, 32))) {
+			player->setPosition(glm::vec2(player->getPosition().x, player->getPosition().y + 2));
+		}
+		if (trans->BottomCollision(player->getPosition(), glm::ivec2(32, 32))) {
+			player->setPosition(glm::vec2(player->getPosition().x + trans->getMovement(), player->getPosition().y - 4));
+			player->setTransporterCollision(true);
+		}
+
+		if (trans->LeftCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
+			mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x + 2, mirrorPlayer->getPosition().y));
+		}
+		if (trans->RightCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
+			mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x - 2, mirrorPlayer->getPosition().y));
+		}
+		if (trans->UpperCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
+			mirrorPlayer->setPosition(glm::vec2(mirrorPlayer->getPosition().x + trans->getMovement(), mirrorPlayer->getPosition().y + 4));
+			mirrorPlayer->setTransporterCollision(true);
+		}
+		
+		
+	}
+}
+
+void Scene::addSpike(glm::vec2 pos, bool mirror) {
+	Spike* spike= new Spike();
+	spike->setSpike(mirror);
+	spike->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	spike->setTileMap(map);
+	spike->setPosition(glm::vec2(pos.x * map->getTileSize(), pos.y * map->getTileSize()));
+	spikeList.push_back(spike);
+}
+
+void Scene::checkSpikeCollisions() {
+	for (Spike* s : spikeList) {
+		if (s->LeftCollision(player->getPosition(), glm::ivec2(32, 32))) {
+			deathExplode->respawnAllParticles(glm::vec2(player->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
+			Reset();
+		}
+		if (s->RightCollision(player->getPosition(), glm::ivec2(32, 32))) {
+			deathExplode->respawnAllParticles(glm::vec2(player->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
+			Reset();
+		}
+		if (s->UpperCollision(player->getPosition(), glm::ivec2(32, 32))) {
+			deathExplode->respawnAllParticles(glm::vec2(player->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
+			Reset();
+		}
+		if (s->BottomCollision(player->getPosition(), glm::ivec2(32, 32))) {
+			deathExplode->respawnAllParticles(glm::vec2(player->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
+			Reset();
+		}
+
+		if (s->LeftCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
+			deathExplode->respawnAllParticles(glm::vec2(mirrorPlayer->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
+			Reset();
+		}
+		if (s->RightCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
+			deathExplode->respawnAllParticles(glm::vec2(mirrorPlayer->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
+			Reset();
+		}
+		if (s->UpperCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
+			deathExplode->respawnAllParticles(glm::vec2(mirrorPlayer->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
+			Reset();
+		}
+		if (s->BottomCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
+			deathExplode->respawnAllParticles(glm::vec2(mirrorPlayer->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
+			Reset();
+		}
+	}
+}
+
+ShaderProgram Scene::initializeParticleShader() {
+	ShaderProgram aux;
+	Shader vShader, fShader;
+
+	vShader.initFromFile(VERTEX_SHADER, "shaders/particle.vert");
+	if (!vShader.isCompiled())
+	{
+		cout << "Vertex Shader Error" << endl;
+		cout << "" << vShader.log() << endl << endl;
+	}
+	fShader.initFromFile(FRAGMENT_SHADER, "shaders/particle.frag");
+	if (!fShader.isCompiled())
+	{
+		cout << "Fragment Shader Error" << endl;
+		cout << "" << fShader.log() << endl << endl;
+	}
+	aux.init();
+	aux.addShader(vShader);
+	aux.addShader(fShader);
+	aux.link();
+	if (!aux.isLinked())
+	{
+		cout << "Shader Linking Error" << endl;
+		cout << "" << texProgram.log() << endl << endl;
+	}
+	aux.bindFragmentOutput("outColor");
+	vShader.free();
+	fShader.free();
+	return aux;
+}
+
+
 
 void Scene::checkBoxCollisions()
 {

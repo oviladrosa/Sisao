@@ -68,6 +68,27 @@ void CSceneState::Update(DWORD deltaTime) {
 				break;
 		}
 	}
+	if (Game::instance().getKey(49)) {
+		pointerScene1->Reset();
+		m_pSceneManager->ChangeScene(pointerScene1);
+	}
+	if (Game::instance().getKey(50)) {
+		pointerScene2->Reset();
+		m_pSceneManager->ChangeScene(pointerScene2);
+	}
+	if (Game::instance().getKey(51)) {
+		pointerScene3->Reset();
+		m_pSceneManager->ChangeScene(pointerScene3);
+	}
+	if (Game::instance().getKey(52)) {
+		pointerScene4->Reset();
+		m_pSceneManager->ChangeScene(pointerScene4);
+	}
+	if (Game::instance().getKey(53)) {
+		pointerScene5->Reset();
+		m_pSceneManager->ChangeScene(pointerScene5);
+	}
+	
 }
 
 void CSceneState::Draw()
@@ -93,6 +114,12 @@ void CSceneState::initLevel01() {
 	pointerScene1->setplayerPostion(glm::ivec2(8, 5));
 	pointerScene1->setmirrorplayerPostion(glm::ivec2(8, 15));
 	pointerScene1->init();
+	pointerScene1->addTransporter(glm::vec2(4, 6), false);
+	pointerScene1->addTransporter(glm::vec2(1, 6), false);
+	pointerScene1->addTransporter(glm::vec2(4, 9), true);
+	pointerScene1->addTransporter(glm::vec2(1, 9), false);
+	pointerScene1->addSpike(glm::vec2(19, 3), true);
+	pointerScene1->addSpike(glm::vec2(10, 10), false);
 }
 
 void CSceneState::initLevel02() {
