@@ -8,6 +8,7 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "Card.h"
+#include "Spike.h"
 
 #include "GameScene.h"
 #include "SceneManager.h"
@@ -46,6 +47,8 @@ public:
 	int getNextScene();
 	void addTransporter(glm::vec2 pos, bool left);
 	void checkTransporterCollisions();
+	void addSpike(glm::vec2 pos, bool mirror);
+	void checkSpikeCollisions();
 
 private:
 	void initShaders();
@@ -61,6 +64,7 @@ private:
 	list<Wall*> wallList;
 	list<Wall*> wallListAux;
 	list<Transporter*> transporterList;
+	list<Spike*> spikeList;
 	Lever* lever;
 	Texture bgText;
 	ShaderProgram texProgram;

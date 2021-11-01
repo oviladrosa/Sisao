@@ -29,6 +29,7 @@
     <ClInclude Include="SceneState.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="Spike.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="StateManager.h" />
     <ClInclude Include="Text.h" />
@@ -58,6 +59,7 @@
     <ClCompile Include="SceneState.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="Spike.cpp" />
     <ClCompile Include="Transporter.cpp" />
     <ClCompile Include="Wall.cpp" />
     <ClCompile Include="Sprite.cpp" />

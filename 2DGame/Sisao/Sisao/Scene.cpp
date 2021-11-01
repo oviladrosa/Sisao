@@ -46,6 +46,7 @@ Scene::Scene(CSceneManager* pManager)
 	wallList = list<Wall*>();
 	wallListAux = list<Wall*>();
 	transporterList = list<Transporter*>();
+	spikeList = list<Spike*>();
 	lever = NULL;
 }
 
@@ -80,6 +81,10 @@ Scene::~Scene()
 	if (!transporterList.empty()) {
 		for (Transporter* trans: transporterList) delete trans;
 		transporterList.clear();
+	}
+	if (!spikeList.empty()) {
+		for (Spike* sp : spikeList) delete sp;
+		spikeList.clear();
 	}
 	if (lever != NULL)
 		delete lever;
@@ -251,7 +256,11 @@ void Scene::Update(DWORD deltaTime)
 	for (Transporter* t : transporterList) {
 		t->update(deltaTime);
 	}
-	
+
+	for (Spike* s : spikeList) {
+		s->update(deltaTime);
+	}
+	checkSpikeCollisions();
 }
 
 void Scene::Draw()
@@ -275,6 +284,7 @@ void Scene::Draw()
 	for(Wall* wall : wallList) wall->render();
 	for(Box* box : boxList) box->render();
 	for (Transporter* t : transporterList) t->render();
+	for (Spike* s : spikeList) s->render();
 	lever->render();
 	radiopool->renderTransparent();
 }
@@ -410,5 +420,46 @@ void Scene::checkTransporterCollisions() {
 		
 	}
 }
+
+void Scene::addSpike(glm::vec2 pos, bool mirror) {
+	Spike* spike= new Spike();
+	spike->setSpike(mirror);
+	spike->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	spike->setTileMap(map);
+	spike->setPosition(glm::vec2(pos.x * map->getTileSize(), pos.y * map->getTileSize()));
+	spikeList.push_back(spike);
+}
+
+void Scene::checkSpikeCollisions() {
+	for (Spike* s : spikeList) {
+		if (s->LeftCollision(player->getPosition(), glm::ivec2(32, 32))) {
+			Reset();
+		}
+		if (s->RightCollision(player->getPosition(), glm::ivec2(32, 32))) {
+			Reset();
+		}
+		if (s->UpperCollision(player->getPosition(), glm::ivec2(32, 32))) {
+			Reset();
+		}
+		if (s->BottomCollision(player->getPosition(), glm::ivec2(32, 32))) {
+			Reset();
+		}
+
+		if (s->LeftCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
+			Reset();
+		}
+		if (s->RightCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
+			Reset();
+		}
+		if (s->UpperCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
+			Reset();
+		}
+		if (s->BottomCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
+			Reset();
+		}
+	}
+}
+
+
 
 

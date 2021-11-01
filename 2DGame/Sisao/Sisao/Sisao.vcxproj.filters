@@ -28,6 +28,7 @@
     <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="CreditsState.cpp" />
     <ClCompile Include="Transporter.cpp" />
+    <ClCompile Include="Spike.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimKeyframes.h" />
@@ -57,5 +58,6 @@
     <ClInclude Include="Wall.h" />
     <ClInclude Include="CreditsState.h" />
     <ClInclude Include="Transporter.h" />
+    <ClInclude Include="Spike.h" />
   </ItemGroup>
 </Project>

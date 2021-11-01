@@ -97,6 +97,8 @@ void CSceneState::initLevel01() {
 	pointerScene1->addTransporter(glm::vec2(1, 6), false);
 	pointerScene1->addTransporter(glm::vec2(4, 9), true);
 	pointerScene1->addTransporter(glm::vec2(1, 9), false);
+	pointerScene1->addSpike(glm::vec2(19, 3), true);
+	pointerScene1->addSpike(glm::vec2(10, 10), false);
 }
 
 void CSceneState::initLevel02() {
