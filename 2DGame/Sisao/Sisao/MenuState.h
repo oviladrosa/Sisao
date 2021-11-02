@@ -40,6 +40,7 @@ private:
 
 	// A pointer to the current active game (if any).
 	Scene* m_pCurrentGame;
+	bool canContinue;
 	ShaderProgram texProgram;
 	ShaderProgram texProgram2;
 	TextBlock *newBlock;

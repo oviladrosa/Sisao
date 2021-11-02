@@ -98,6 +98,7 @@ CMenuState::CMenuState(CStateManager* pManager)
 		&bgText_5, &texProgram2);
 	background_5->setPosition(background_5->position());
 	titlePosition = glm::vec2(740.f, 190.f);
+	canContinue = false;
 }
 
 CMenuState::~CMenuState()
@@ -137,10 +138,14 @@ void CMenuState::Update(DWORD deltaTime) {
 			case 0:
 				CSceneState::GetInstance(m_pStateManager)->resetState();
 				ChangeState(CSceneState::GetInstance(m_pStateManager));
+				canContinue = true;
 				break;
 			case 1:
-				CSceneState::GetInstance(m_pStateManager)->EnterScene();
-				ChangeState(CSceneState::GetInstance(m_pStateManager));
+				if (canContinue) {
+					CSceneState::GetInstance(m_pStateManager)->EnterScene();
+					ChangeState(CSceneState::GetInstance(m_pStateManager));
+					
+				}
 				break;
 			case 2:
 				ChangeState(CInstructionsState::GetInstance(m_pStateManager));
