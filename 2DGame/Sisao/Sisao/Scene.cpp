@@ -278,6 +278,7 @@ void Scene::Update(DWORD deltaTime)
 	checkWallCollisions();
 	checkBoxCollisions();
 	checkSpikeCollisions();
+	checkHydraulicPressCollisions();
 	
 }
 
@@ -660,7 +661,47 @@ void Scene::addHammer(glm::vec2 pos, bool mirror) {
 
 void Scene::checkHydraulicPressCollisions()
 {
-	
+	int intY;
+	for (HydraulicPress* hammer : hammerList)
+	{
+
+		if (hammer->LeftCollision(player->getPosition(), glm::ivec2(32, 32)) && hammer->getAnimation() == 0)
+		{
+			deathExplode->respawnAllParticles(glm::vec2(player->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
+			Reset();
+		}
+		else if (hammer->LeftCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32)) && hammer->getAnimation() == 0)
+		{
+			deathExplode->respawnAllParticles(glm::vec2(mirrorPlayer->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
+			Reset();
+		}
+		if (hammer->RightCollision(player->getPosition(), glm::ivec2(32, 32)) && hammer->getAnimation() == 0)
+		{
+			deathExplode->respawnAllParticles(glm::vec2(player->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
+			Reset();
+		}
+		else if (hammer->RightCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32)) && hammer->getAnimation() == 0)
+		{
+			deathExplode->respawnAllParticles(glm::vec2(mirrorPlayer->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
+			Reset();
+		}
+		if (hammer->UpperCollision(player->getPosition(), glm::ivec2(32, 32), &intY) && hammer->getAnimation() == 0)
+		{
+			deathExplode->respawnAllParticles(glm::vec2(player->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
+			Reset();
+		}
+		if (hammer->BottomCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32), &intY) && hammer->getAnimation() == 0)
+		{
+			deathExplode->respawnAllParticles(glm::vec2(mirrorPlayer->getPosition()), glm::vec2(2.0f));
+			SoundEngine2->play2D("audio/hit.wav", false);
+			Reset();
+		}
+	}
 }
 
 
