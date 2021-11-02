@@ -19,6 +19,7 @@ public:
 	bool isPlayerTouching(glm::vec2& posPlayer);
 	void setMirror(bool mir);
 	bool isMirror() { return mirror; };
+	int getAnimation() const;
 	
 	bool LeftCollision(const glm::ivec2& posCollider, const glm::ivec2& size);
 	bool RightCollision(const glm::ivec2& posCollider, const glm::ivec2& size);
@@ -27,6 +28,7 @@ public:
 
 private:
 	bool mirror;
+	int lastIDLEAnimationChange, lastHitAnimationChange;
 };
 
 #endif	//_HYDRAULICPRESS_H
