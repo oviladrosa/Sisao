@@ -204,6 +204,7 @@ void Scene::init()
 		200
 	);
 	GodMode = false;
+	removeBarrier = false;
 }
 
 void Scene::Update(DWORD deltaTime)
@@ -214,6 +215,9 @@ void Scene::Update(DWORD deltaTime)
 	if (Game::instance().getKey(103)) {
 		GodMode = !GodMode;
 		Game::instance().keyReleased(103);
+	}
+	if (Game::instance().getKey(114) && !removeBarrier) {
+		removeBarrier = true;
 	}
 	if (!finished) {
 		player->update(deltaTime);
@@ -234,7 +238,7 @@ void Scene::Update(DWORD deltaTime)
 	lever->update(deltaTime);
 	if (lever->isPlayerTouching(glm::vec2(player->getPosition()))
 		|| lever->isPlayerTouching(glm::vec2(mirrorPlayer->getPosition()))) lever->setEnabled(true);
-	if (lever->isEnabled()) wallList.clear();
+	if (lever->isEnabled() || removeBarrier) wallList.clear();
 	else
 	{
 		for (Wall* wall : wallList)
@@ -324,7 +328,7 @@ void Scene::Draw()
 void Scene::Reset() {
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	mirrorPlayer->setPosition(glm::vec2(INIT_MIRROR_PLAYER_X_TILES * map->getTileSize(), INIT_MIRROR_PLAYER_Y_TILES * map->getTileSize()));
-	if (lever->isEnabled())
+	if (lever->isEnabled() || removeBarrier)
 	{
 		lever->setEnabled(false);
 		for (Wall* wall : wallListAux)
@@ -348,6 +352,7 @@ void Scene::Reset() {
 	player->setPosition(glm::vec2(playerPostion.x * map->getTileSize(), playerPostion.y * map->getTileSize()));
 	mirrorPlayer->setPosition(glm::vec2(mirrorplayerPostion.x * map->getTileSize(), mirrorplayerPostion.y * map->getTileSize()));
 	finished = false;
+	removeBarrier = false;
 }
 
 void Scene::initShaders()
