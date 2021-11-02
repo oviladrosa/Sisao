@@ -43,7 +43,10 @@ public:
 	void setcard2Postion(glm::vec2 pos);
 	void setplayerPostion(glm::ivec2 pos);
 	void setmirrorplayerPostion(glm::ivec2 pos);
+	void addLever(glm::vec2 pos);
+	void addWall(glm::vec2 pos);
 	void checkWallCollisions();
+	void addBox(glm::vec2 pos, bool mirror);
 	void checkBoxCollisions();
 	void addHammer(glm::vec2 pos, bool mirror);
 	void checkHydraulicPressCollisions();

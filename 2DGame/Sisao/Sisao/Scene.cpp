@@ -15,20 +15,6 @@ using namespace irrklang;
 #define INIT_PLAYER_Y_TILES 5
 #define INIT_MIRROR_PLAYER_X_TILES 8
 #define INIT_MIRROR_PLAYER_Y_TILES 15
-#define INIT_CARD1_X_TILES 6
-#define INIT_CARD1_Y_TILES 2
-#define INIT_CARD2_X_TILES 6
-#define INIT_CARD2_Y_TILES 15
-#define INIT_WALL1_X_TILES 28
-#define INIT_WALL1_Y_TILES 6
-#define INIT_WALL2_X_TILES 25
-#define INIT_WALL2_Y_TILES 7
-#define INIT_BOX_X_TILES 8
-#define INIT_BOX_Y_TILES 6
-#define INIT_BOX2_X_TILES 9
-#define INIT_BOX2_Y_TILES 9
-#define INIT_LEVER_X_TILES 10 
-#define INIT_LEVER_Y_TILES 6
 
 ISoundEngine* SoundEngine2 = createIrrKlangDevice();
 
@@ -142,41 +128,7 @@ void Scene::init()
 	card2->setPosition(glm::vec2(glm::vec2(card2Position.x * map->getTileSize(), card2Position.y * map->getTileSize())));
 	card2->setTileMap(map);
 
-	Box* box = new Box();
-	box->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	box->setPosition(glm::vec2(INIT_BOX_X_TILES * map->getTileSize(), INIT_BOX_Y_TILES * map->getTileSize()));
-	box->setTileMap(map);
-	box->setMirror(false);
-	boxList.push_back(box);
-
-	Box* box2 = new Box();
-	box2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	box2->setPosition(glm::vec2(INIT_BOX2_X_TILES * map->getTileSize(), INIT_BOX2_Y_TILES * map->getTileSize()));
-	box2->setTileMap(map);
-	box2->setMirror(true);
-	boxList.push_back(box2);
-
-	Wall* wall = new Wall();
-	wall->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	wall->setPosition(glm::vec2(INIT_WALL1_X_TILES * map->getTileSize(), INIT_WALL1_Y_TILES * map->getTileSize()));
-	wall->setTileMap(map);
-	wallList.push_back(wall);
-	wallListAux.push_back(wall);
-
-	Wall* wall2 = new Wall();
-	wall2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	wall2->setPosition(glm::vec2(INIT_WALL2_X_TILES * map->getTileSize(), INIT_WALL2_Y_TILES * map->getTileSize()));
-	wall2->setTileMap(map);
-	wallList.push_back(wall2);
-	wallListAux.push_back(wall2);
-
-	lever = new Lever();
-	lever->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	lever->setPosition(glm::vec2(INIT_LEVER_X_TILES * map->getTileSize(), INIT_LEVER_Y_TILES * map->getTileSize()));
-	lever->setTileMap(map);
-
-
-	float half_point = (INIT_PLAYER_X_TILES + INIT_MIRROR_PLAYER_X_TILES) / 2.0;
+	float half_point = float(playerPostion.x + mirrorplayerPostion.x) / 2.0f;
 	projection = glm::ortho((half_point*32.f)-SCREEN_WIDTH/4.f, (half_point * 32.f) + SCREEN_WIDTH / 4.f, float(SCREEN_HEIGHT - 1)/2.f, 0.f);
 	currentTime = 0.0f;
 	SoundEngine2->play2D("audio/gameloop.mp3", true);
@@ -326,8 +278,6 @@ void Scene::Draw()
 }
 
 void Scene::Reset() {
-	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	mirrorPlayer->setPosition(glm::vec2(INIT_MIRROR_PLAYER_X_TILES * map->getTileSize(), INIT_MIRROR_PLAYER_Y_TILES * map->getTileSize()));
 	if (lever->isEnabled() || removeBarrier)
 	{
 		lever->setEnabled(false);
@@ -338,15 +288,9 @@ void Scene::Reset() {
 			wall->setIsActive(true);
 		}
 	}
-	//cuidado aqui, tenemos que sustituir cada posicion inicial en su respectivo box.
-	int i = 1;
 	for (Box* box : boxList)
 	{
-		if(i == 1)
-			box->setPosition(glm::vec2(INIT_BOX_X_TILES * map->getTileSize(), INIT_BOX_Y_TILES * map->getTileSize()));
-		else 
-			box->setPosition(glm::vec2(INIT_BOX2_X_TILES * map->getTileSize(), INIT_BOX2_Y_TILES * map->getTileSize()));
-		++i;
+		box->setPosition(glm::vec2(box->getInitialPosition().x * map->getTileSize(), box->getInitialPosition().y * map->getTileSize()));
 	}
 	
 	player->setPosition(glm::vec2(playerPostion.x * map->getTileSize(), playerPostion.y * map->getTileSize()));
@@ -554,7 +498,16 @@ ShaderProgram Scene::initializeParticleShader() {
 	return aux;
 }
 
-
+void Scene::addBox(glm::vec2 pos, bool mirror)
+{
+	Box* box = new Box();
+	box->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	box->setPosition(glm::vec2(pos.x * map->getTileSize(), pos.y * map->getTileSize()));
+	box->setInitialPosition(pos);
+	box->setTileMap(map);
+	box->setMirror(mirror);
+	boxList.push_back(box);
+}
 
 void Scene::checkBoxCollisions()
 {
@@ -633,6 +586,16 @@ void Scene::checkBoxCollisions()
 		}
 		
 	}
+}
+
+void Scene::addWall(glm::vec2 pos)
+{
+	Wall* wall = new Wall();
+	wall->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	wall->setPosition(glm::vec2(pos.x * map->getTileSize(), pos.y * map->getTileSize()));
+	wall->setTileMap(map);
+	wallList.push_back(wall);
+	wallListAux.push_back(wall);
 }
 
 void Scene::checkWallCollisions()
@@ -715,6 +678,15 @@ void Scene::checkHydraulicPressCollisions()
 			Reset();
 		}
 	}
+}
+
+void Scene::addLever(glm::vec2 pos)
+{
+	lever = new Lever();
+	lever->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	lever->setTileMap(map);
+	lever->setPosition(glm::vec2(pos.x * map->getTileSize(), pos.y * map->getTileSize()));
+
 }
 
 

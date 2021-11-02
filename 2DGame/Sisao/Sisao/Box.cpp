@@ -36,6 +36,11 @@ void Box::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 	lastDirection = true;
 }
 
+void Box::setInitialPosition(const glm::vec2& pos)
+{
+	initialPosition = pos;
+}
+
 void Box::update(int deltaTime)
 {
 	sprite->update(deltaTime);
