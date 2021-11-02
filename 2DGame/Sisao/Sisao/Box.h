@@ -16,6 +16,7 @@ public:
 
 	void setTileMap(TileMap* tileMap);
 	void setPosition(const glm::vec2& pos);
+	void setInitialPosition(const glm::vec2& pos);
 	bool isPlayerTouching(glm::vec2& posPlayer);
 	bool isMirror();
 	bool isFalling() { return falling; }
