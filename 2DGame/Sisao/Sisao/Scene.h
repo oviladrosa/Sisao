@@ -92,6 +92,8 @@ private:
 	ParticleGenerator* Particles;
 	ParticleGenerator* Particles2;
 	ParticleGenerator* deathExplode;
+	bool GodMode;
+	bool removeBarrier;
 };
 
 

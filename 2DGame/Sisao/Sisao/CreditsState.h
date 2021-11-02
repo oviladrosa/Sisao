@@ -37,6 +37,7 @@ private:
 	Text Credits;
 
 	float counter;
+	TextBlock* bg;
 
 
 	glm::mat4 projection;
