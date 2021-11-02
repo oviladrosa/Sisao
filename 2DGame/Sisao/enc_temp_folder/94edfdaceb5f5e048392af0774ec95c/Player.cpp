@@ -172,7 +172,7 @@ void Player::update(int deltaTime)
 				if (map->collisionMoveUp(posPlayer, glm::ivec2(32, 32), &posPlayer.y))
 				{
 					//jumpAngle = 180;
-					bJumping = false;
+					
 					velocityParticle.y = 0.f;
 				}
 				if (jumpAngle < 45 && transporterColl) {

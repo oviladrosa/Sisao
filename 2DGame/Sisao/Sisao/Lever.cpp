@@ -60,8 +60,8 @@ void Lever::setPosition(const glm::vec2& pos)
 
 bool Lever::isPlayerTouching(glm::vec2& posPlayer)
 {
-	return (float(tileMapDispl.x + posPlayer.x) == float(tileMapDispl.x + posObstacle.x))
-		&& (float(tileMapDispl.y + posPlayer.y) == float(tileMapDispl.y + posObstacle.y));
+	return (float(posPlayer.x+16) >= float(posObstacle.x) && float(posPlayer.x+16) <= float(posObstacle.x +32)
+		&& float(posPlayer.y+16) >= float(posObstacle.y) && float(posPlayer.y+16) <= float(posObstacle.y + 32));
 }
 
 bool Lever::isEnabled()

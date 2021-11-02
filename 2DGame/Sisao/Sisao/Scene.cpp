@@ -27,8 +27,8 @@ using namespace irrklang;
 #define INIT_BOX_Y_TILES 6
 #define INIT_BOX2_X_TILES 9
 #define INIT_BOX2_Y_TILES 9
-#define INIT_LEVER_X_TILES 36 
-#define INIT_LEVER_Y_TILES 7
+#define INIT_LEVER_X_TILES 10 
+#define INIT_LEVER_Y_TILES 6
 
 ISoundEngine* SoundEngine2 = createIrrKlangDevice();
 
