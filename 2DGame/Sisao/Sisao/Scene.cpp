@@ -203,12 +203,18 @@ void Scene::init()
 		particleTex,
 		200
 	);
+	GodMode = false;
 }
 
 void Scene::Update(DWORD deltaTime)
 {
 	currentTime += deltaTime;
 	checkTransporterCollisions();
+
+	if (Game::instance().getKey(103)) {
+		GodMode = !GodMode;
+		Game::instance().keyReleased(103);
+	}
 	if (!finished) {
 		player->update(deltaTime);
 		mirrorPlayer->update(deltaTime);
@@ -277,9 +283,10 @@ void Scene::Update(DWORD deltaTime)
 
 	checkWallCollisions();
 	checkBoxCollisions();
-	checkSpikeCollisions();
-	checkHydraulicPressCollisions();
-	
+	if (!GodMode) {
+		checkSpikeCollisions();
+		checkHydraulicPressCollisions();
+	}
 }
 
 void Scene::Draw()
@@ -374,6 +381,7 @@ void Scene::initShaders()
 }
 
 void Scene::EnterScene() {
+	GodMode = false;
 	SoundEngine2->play2D("audio/gameloop.mp3", true);
 }
 
