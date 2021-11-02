@@ -115,7 +115,7 @@ void CSceneState::initLevel01() {
 	pointerScene1->setmirrorplayerPostion(glm::ivec2(8, 15));
 	
 	pointerScene1->init();
-	pointerScene1->addLever(glm::vec2(36, 7));
+	pointerScene1->addLever(glm::vec2(12, 6));
 	pointerScene1->addTransporter(glm::vec2(4, 6), false);
 	pointerScene1->addTransporter(glm::vec2(1, 6), false);
 	pointerScene1->addTransporter(glm::vec2(4, 9), true);
