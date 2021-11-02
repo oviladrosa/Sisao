@@ -28,6 +28,7 @@ private:
 	// The player went up or down in 
 	// the menu
 	void initShaders();
+	void initTextShaders();
 	void SelectionUp();
 	void SelectionDown();
 	// The player validated the current selection
@@ -40,6 +41,7 @@ private:
 	// A pointer to the current active game (if any).
 	Scene* m_pCurrentGame;
 	ShaderProgram texProgram;
+	ShaderProgram texProgram2;
 	TextBlock *newBlock;
 	Text newText;
 	TextBlock *restartBlock;
@@ -53,7 +55,17 @@ private:
 	Text title;
 	bool up;
 	bool down;
-
+	Texture bgText_1;
+	Sprite* background_1;
+	Texture bgText_2;
+	Sprite* background_2;
+	Texture bgText_3;
+	Sprite* background_3;
+	Texture bgText_4;
+	Sprite* background_4;
+	Texture bgText_5;
+	Sprite* background_5;
+	glm::vec2 titlePosition;
 
 };
 

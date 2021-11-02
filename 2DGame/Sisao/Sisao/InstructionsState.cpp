@@ -97,19 +97,19 @@ CInstructionsState::CInstructionsState(CStateManager* pManager)
 	playerLeft = new Player();
 	playerLeft->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, false);
 	playerLeft->setPosition(glm::vec2(650.f, 140.f));
-	playerLeft->forceAnimation(0);
+	playerLeft->forceAnimation(2);
 	playerLeft->changeDemo(true);
 
 	playerRight = new Player();
 	playerRight->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, false);
 	playerRight->setPosition(glm::vec2(650.f, 190.f));
-	playerRight->forceAnimation(1);
+	playerRight->forceAnimation(3);
 	playerRight->changeDemo(true);
 
 	playerUp = new Player();
 	playerUp->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, false);
 	playerUp->setPosition(glm::vec2(650.f, 240.f));
-	playerUp->forceAnimation(2);
+	playerUp->forceAnimation(14);
 	playerUp->changeDemo(true);
 	page = 0;
 
@@ -140,17 +140,28 @@ CInstructionsState::CInstructionsState(CStateManager* pManager)
 
 	hammer = new HydraulicPress();
 	hammer->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	hammer->setPosition(glm::vec2(580.f,340.f));
+	hammer->setPosition(glm::vec2(450.f,390.f));
 
-	transporterText.loadFromFile("images/transporter.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	transporterText.setMinFilter(GL_NEAREST);
-	transporterText.setMagFilter(GL_NEAREST);
+	spike = new Spike();
+	spike->setSpike(false);
+	spike->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	spike->setPosition(glm::vec2(300.f,390));
 
-	Transporter = Sprite::createSprite(glm::vec2(64.f, 8.f), glm::vec2(1.f, 1.f), &transporterText, &texProgram);
-	Transporter->setPosition(glm::vec2(560.f, 480.f));
+	transporter = new Transporter();
+	transporter->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	transporter->setPosition(glm::vec2(575.f, 410.f));
+	transporter->setDirection(left);
 
 	right = false;
 	left = false;
+
+	bgTex.loadFromFile("images/whiteboard.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	bgTex.setMinFilter(GL_NEAREST);
+	bgTex.setMagFilter(GL_NEAREST);
+
+	background = Sprite::createSprite(glm::vec2(float(SCREEN_WIDTH - 1)/1.66f, float(SCREEN_HEIGHT - 1) /1.8f ), glm::vec2(1.f, 1.f),
+		&bgTex, &texProgram);
+	background->setPosition(glm::vec2(-70.f,0));
 }
 
 CInstructionsState::~CInstructionsState()
@@ -169,6 +180,7 @@ void CInstructionsState::Update(DWORD deltaTime) {
 	playerUp->update(deltaTime);
 	card1->update(deltaTime);
 	hammer->update(deltaTime);
+	transporter->update(deltaTime);
 	if (Game::instance().getKey(27)) {
 		ChangeState(CMenuState::GetInstance(m_pStateManager));
 	}
@@ -203,11 +215,11 @@ void CInstructionsState::Draw()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	
+	background->render();
 	if (page == 0) {
 		keyLeft->render();
 		keyUp->render();
 		keyRight->render();
-
 		playerLeft->render();
 		playerRight->render();
 		playerUp->render();
@@ -226,16 +238,17 @@ void CInstructionsState::Draw()
 		Lever->render();
 		Box->render();
 		hammer->render();
-		Transporter->render();
+		transporter->render();
+		spike->render();
 		objects.render("Objects", glm::vec2(860.f, 210.f), 32, glm::vec4(1.f, 1.f, 1.f, 1.f));
 		objects.render("Card (goal)", glm::vec2(680.f, 270.f), 26, glm::vec4(1.f, 1.f, 1.f, 1.f));
 		objects.render("Lever", glm::vec2(680.f, 340.f), 26, glm::vec4(1.f, 1.f, 1.f, 1.f));
 		objects.render("Barrier", glm::vec2(680.f, 410.f), 26, glm::vec4(1.f, 1.f, 1.f, 1.f));
 		objects.render("Box", glm::vec2(680.f, 480.f), 26, glm::vec4(1.f, 1.f, 1.f, 1.f));
 		objects.render("Obstacles", glm::vec2(850.f, 600.f), 32, glm::vec4(1.f, 1.f, 1.f, 1.f));
-		objects.render("Hammer", glm::vec2(680.f, 700.f), 26, glm::vec4(1.f, 1.f, 1.f, 1.f));
-		objects.render("Spikes", glm::vec2(680.f, 850.f), 26, glm::vec4(1.f, 1.f, 1.f, 1.f));
-		objects.render("Sliders", glm::vec2(680.f, 920.f), 26, glm::vec4(1.f, 1.f, 1.f, 1.f));
+		objects.render("Hammer", glm::vec2(880.f, 680.f), 26, glm::vec4(1.f, 1.f, 1.f, 1.f));
+		objects.render("Spikes", glm::vec2(580.f, 680.f), 26, glm::vec4(1.f, 1.f, 1.f, 1.f));
+		objects.render("Sliders", glm::vec2(1180.f, 680.f), 26, glm::vec4(1.f, 1.f, 1.f, 1.f));
 	}
 
 	if (page == 2) {
@@ -248,13 +261,13 @@ void CInstructionsState::Draw()
 	
 	title.render("INSTRUCTIONS", glm::vec2(710.f, 150.f), 64, glm::vec4(1.f, 1.f, 1.f, 1.f));
 	
-	goMenu.render("Press ESC to return to the Main Menu", glm::vec2(1570.f, 990.f), 16, glm::vec4(1.f, 1.f, 1.f, 1.f));
+	goMenu.render("Press ESC to return to the Main Menu", glm::vec2(1570.f, 1000.f), 16, glm::vec4(1.f, 1.f, 1.f, 1.f));
 	
 	if (page > 0) {
-		goBack.render("<", glm::vec2(10.f, 500.f), 64, glm::vec4(1.f, 1.f, 1.f, 1.f));
+		goBack.render("<", glm::vec2(90.f, 500.f), 64, glm::vec4(1.f, 1.f, 1.f, 1.f));
 	}
 	if (page < 2) {
-		goNext.render(">", glm::vec2(1880.f, 500.f), 64, glm::vec4(1.f, 1.f, 1.f, 1.f));
+		goNext.render(">", glm::vec2(1820.f, 500.f), 64, glm::vec4(1.f, 1.f, 1.f, 1.f));
 	}
 	
 }

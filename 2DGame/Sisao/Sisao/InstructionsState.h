@@ -74,10 +74,12 @@ private:
 
 	HydraulicPress* hammer;
 
-	Texture transporterText;
-	Sprite* Transporter;
+	Spike* spike;
 
+	Transporter* transporter;
 
+	Texture bgTex;
+	Sprite* background;
 };
 
 #endif  // _INSTRUCTIONSSTATE_H_

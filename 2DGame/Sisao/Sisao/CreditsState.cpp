@@ -29,6 +29,7 @@ CCreditsState::CCreditsState(CStateManager* pManager)
 		cout << "Could not load font!!!" << endl;
 
 	counter = 0.f;
+	this->bg = new TextBlock(-10.f, -2.f, 1920.f, 1080.f, texProgram);
 
 }
 
@@ -57,11 +58,12 @@ void CCreditsState::Draw()
 	glm::mat4 modelview;
 	texProgram.use();
 	texProgram.setUniformMatrix4f("projection", projection);
-	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+	texProgram.setUniform4f("color", 0.f, 0.f, 0.f, 1.0f);
 	modelview = glm::mat4(1.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 
+	bg->Draw();
 	Credits.render("SISAO", glm::vec2(860.f, 210.f-counter),64, glm::vec4(1.f, 1.f, 1.f, 1.f));
 	Credits.render("VJ-2D", glm::vec2(910.f, 240.f - counter), 32, glm::vec4(1.f, 1.f, 1.f, 1.f));
 	Credits.render("- Productors -", glm::vec2(850.f, 320.f - counter), 32, glm::vec4(1.f, 1.f, 1.f, 1.f));
