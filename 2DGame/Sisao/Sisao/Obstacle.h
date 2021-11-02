@@ -18,6 +18,7 @@ public:
 	virtual void setTileMap(TileMap* tileMap) {}
 	virtual void setPosition(const glm::vec2& pos) {}
 	virtual bool isPlayerTouching(glm::vec2& posPlayer) { return false;}
+	virtual glm::vec2 getInitialPosition() { return initialPosition; }
 	
 	virtual bool LeftCollision(const glm::ivec2& posCollider, const glm::ivec2& size) { return false; }
 	virtual bool RightCollision(const glm::ivec2& posCollider, const glm::ivec2& size) { return false; }
