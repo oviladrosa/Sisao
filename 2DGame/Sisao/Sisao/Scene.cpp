@@ -19,8 +19,6 @@ using namespace irrklang;
 #define INIT_CARD1_Y_TILES 2
 #define INIT_CARD2_X_TILES 6
 #define INIT_CARD2_Y_TILES 15
-#define INIT_HAMMER_X_TILES 18
-#define INIT_HAMMER_Y_TILES 8
 #define INIT_WALL1_X_TILES 28
 #define INIT_WALL1_Y_TILES 6
 #define INIT_WALL2_X_TILES 25
@@ -48,7 +46,7 @@ Scene::Scene(CSceneManager* pManager)
 	background = NULL;
 	card1 = NULL;
 	card2 = NULL;
-	hammer = NULL;
+	hammerList = list<HydraulicPress*>();
 	boxList = list<Box*>();
 	wallList = list<Wall*>();
 	wallListAux = list<Wall*>();
@@ -71,8 +69,10 @@ Scene::~Scene()
 		delete card1;
 	if (card2 != NULL)
 		delete card2;
-	if (hammer != NULL)
-		delete hammer;
+	if (hammerList.empty()) {
+		for (HydraulicPress* hammer : hammerList) delete hammer;
+		hammerList.clear();
+	}
 	if (!wallList.empty()) {
 		for (Wall* wall : wallList) delete wall;
 		wallList.clear();
@@ -141,11 +141,6 @@ void Scene::init()
 	card2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	card2->setPosition(glm::vec2(glm::vec2(card2Position.x * map->getTileSize(), card2Position.y * map->getTileSize())));
 	card2->setTileMap(map);
-
-	hammer = new HydraulicPress();
-	hammer->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	hammer->setPosition(glm::vec2(INIT_HAMMER_X_TILES * map->getTileSize(), INIT_HAMMER_Y_TILES * map->getTileSize()));
-	hammer->setTileMap(map);
 
 	Box* box = new Box();
 	box->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -230,7 +225,6 @@ void Scene::Update(DWORD deltaTime)
 		float half_point = (player->getPosition()[0] + mirrorPlayer->getPosition()[0]) / 2.f;
 		projection = glm::ortho((half_point)-SCREEN_WIDTH / 4.f, (half_point)+SCREEN_WIDTH / 4.f, float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
 	}
-	hammer->update(deltaTime);
 	lever->update(deltaTime);
 	if (lever->isPlayerTouching(glm::vec2(player->getPosition()))
 		|| lever->isPlayerTouching(glm::vec2(mirrorPlayer->getPosition()))) lever->setEnabled(true);
@@ -242,6 +236,9 @@ void Scene::Update(DWORD deltaTime)
 	}
 	for (Box* box : boxList)
 		box->update(deltaTime);
+
+	for (HydraulicPress* hammer : hammerList)
+		hammer->update(deltaTime);
 
 	if (player->getPosition()[0] < SCREEN_WIDTH / 4.f || mirrorPlayer->getPosition()[0] < SCREEN_WIDTH / 4.f) {
 		projection = glm::ortho(0.f, float(SCREEN_WIDTH / 2.f), float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
@@ -301,11 +298,11 @@ void Scene::Draw()
 	mirrorPlayer->render();
 	card1->render();
 	card2->render();
-	hammer->render();
 	for(Wall* wall : wallList) wall->render();
 	for(Box* box : boxList) box->render();
 	for (Transporter* t : transporterList) t->render();
 	for (Spike* s : spikeList) s->render();
+	for (HydraulicPress* hammer : hammerList) hammer->render();
 	lever->render();
 	radiopool->renderTransparent();
 
@@ -414,6 +411,8 @@ int Scene::getNextScene() {
 bool Scene::isFinished() {
 	return finished;
 }
+
+
 
 void Scene::addTransporter(glm::vec2 pos, bool left) {
 	Transporter* transporter = new Transporter();
@@ -648,6 +647,20 @@ void Scene::checkWallCollisions()
 			mirrorPlayer->forceAnimation(1); //STAND_RIGHT
 		}
 	}
+}
+
+void Scene::addHammer(glm::vec2 pos, bool mirror) {
+	HydraulicPress* hammer = new HydraulicPress();
+	hammer->setMirror(mirror);
+	hammer->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	hammer->setTileMap(map);
+	hammer->setPosition(glm::vec2(pos.x * map->getTileSize(), pos.y * map->getTileSize()));
+	hammerList.push_back(hammer);
+}
+
+void Scene::checkHydraulicPressCollisions()
+{
+	
 }
 
 

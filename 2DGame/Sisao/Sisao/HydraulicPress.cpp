@@ -59,6 +59,7 @@ void HydraulicPress::setTileMap(TileMap* tileMap)
 void HydraulicPress::setPosition(const glm::vec2& pos)
 {
 	posObstacle = pos;
+	initialPosition = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + initialPosition.x), float(tileMapDispl.y + initialPosition.y)));
 }
 
@@ -66,6 +67,11 @@ bool HydraulicPress::isPlayerTouching(glm::vec2& posPlayer)
 {
 	return (float(tileMapDispl.x + posPlayer.x) == float(tileMapDispl.x + posObstacle.x))
 		&& (float(tileMapDispl.y + posPlayer.y) == float(tileMapDispl.y + posObstacle.y));
+}
+
+void HydraulicPress::setMirror(bool mir)
+{
+	mirror = mir;
 }
 
 bool HydraulicPress::LeftCollision(const glm::ivec2& posCollider, const glm::ivec2& size)

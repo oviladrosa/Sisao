@@ -45,6 +45,8 @@ public:
 	void setmirrorplayerPostion(glm::ivec2 pos);
 	void checkWallCollisions();
 	void checkBoxCollisions();
+	void addHammer(glm::vec2 pos, bool mirror);
+	void checkHydraulicPressCollisions();
 	void setNextScene(int x);
 	bool isFinished();
 	int getNextScene();
@@ -63,7 +65,7 @@ private:
 	Player* mirrorPlayer;
 	Card* card1;
 	Card* card2;
-	HydraulicPress* hammer;
+	list<HydraulicPress*> hammerList;
 	list<Box*> boxList;
 	list<Wall*> wallList;
 	list<Wall*> wallListAux;
