@@ -133,6 +133,7 @@ void Scene::init()
 	currentTime = 0.0f;
 	SoundEngine2->play2D("audio/gameloop.mp3", true);
 	finished = false;
+	startHammerSound = true;
 
 
 	ShaderProgram particleSystem = initializeParticleShader();
@@ -188,8 +189,12 @@ void Scene::Update(DWORD deltaTime)
 		projection = glm::ortho((half_point)-SCREEN_WIDTH / 4.f, (half_point)+SCREEN_WIDTH / 4.f, float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
 	}
 	lever->update(deltaTime);
-	if (lever->isPlayerTouching(glm::vec2(player->getPosition()))
-		|| lever->isPlayerTouching(glm::vec2(mirrorPlayer->getPosition()))) lever->setEnabled(true);
+	if ((lever->isPlayerTouching(glm::vec2(player->getPosition()))
+		|| lever->isPlayerTouching(glm::vec2(mirrorPlayer->getPosition()))) && !lever->isEnabled())
+	{
+		SoundEngine2->play2D("audio/lever.wav", false);
+		lever->setEnabled(true);
+	}
 	if (lever->isEnabled() || removeBarrier) wallList.clear();
 	else
 	{
@@ -200,7 +205,13 @@ void Scene::Update(DWORD deltaTime)
 		box->update(deltaTime);
 
 	for (HydraulicPress* hammer : hammerList)
+	{ 
+		if (startHammerSound && hammer->getAnimation() == 1) {
+			SoundEngine2->play2D("audio/hammer-complete-9.wav", true);
+			startHammerSound = false;
+		}
 		hammer->update(deltaTime);
+	}
 
 	if (player->getPosition()[0] < SCREEN_WIDTH / 4.f || mirrorPlayer->getPosition()[0] < SCREEN_WIDTH / 4.f) {
 		projection = glm::ortho(0.f, float(SCREEN_WIDTH / 2.f), float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
