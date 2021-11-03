@@ -94,6 +94,7 @@ private:
 	ParticleGenerator* deathExplode;
 	bool GodMode;
 	bool removeBarrier;
+	bool startHammerSound;
 };
 
 
