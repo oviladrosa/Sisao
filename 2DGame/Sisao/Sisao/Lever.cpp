@@ -9,6 +9,7 @@ enum LeverAnims
 
 Lever::Lever() : Obstacle()
 {
+	mirror = false;
 }
 
 Lever::~Lever()
@@ -17,7 +18,8 @@ Lever::~Lever()
 
 void Lever::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 {
-	spritesheet.loadFromFile("images/Lever2.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	if (!mirror) spritesheet.loadFromFile("images/Lever2.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	else spritesheet.loadFromFile("images/Lever2-mirror.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.5f, 1.f), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(2);
@@ -89,4 +91,8 @@ bool Lever::UpperCollision(const glm::ivec2& posCollider, const glm::ivec2& size
 bool Lever::BottomCollision(const glm::ivec2& posCollider, const glm::ivec2& size, int* posY)
 {
 	return false;
+}
+
+void Lever::setMirror(bool m) {
+	mirror = m;
 }

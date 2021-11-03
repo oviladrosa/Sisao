@@ -451,43 +451,43 @@ void Scene::addSpike(glm::vec2 pos, bool mirror) {
 void Scene::checkSpikeCollisions() {
 	for (Spike* s : spikeList) {
 		if (s->LeftCollision(player->getPosition(), glm::ivec2(32, 32))) {
-			deathExplode->respawnAllParticles(glm::vec2(player->getPosition()), glm::vec2(2.0f));
+			deathExplode->respawnAllParticles(glm::vec2(player->getPosition())+16.f, glm::vec2(2.0f));
 			SoundEngine2->play2D("audio/hit.wav", false);
 			Reset();
 		}
 		if (s->RightCollision(player->getPosition(), glm::ivec2(32, 32))) {
-			deathExplode->respawnAllParticles(glm::vec2(player->getPosition()), glm::vec2(2.0f));
+			deathExplode->respawnAllParticles(glm::vec2(player->getPosition()) + 16.f, glm::vec2(2.0f));
 			SoundEngine2->play2D("audio/hit.wav", false);
 			Reset();
 		}
 		if (s->UpperCollision(player->getPosition(), glm::ivec2(32, 32))) {
-			deathExplode->respawnAllParticles(glm::vec2(player->getPosition()), glm::vec2(2.0f));
+			deathExplode->respawnAllParticles(glm::vec2(player->getPosition()) + 16.f, glm::vec2(2.0f));
 			SoundEngine2->play2D("audio/hit.wav", false);
 			Reset();
 		}
 		if (s->BottomCollision(player->getPosition(), glm::ivec2(32, 32))) {
-			deathExplode->respawnAllParticles(glm::vec2(player->getPosition()), glm::vec2(2.0f));
+			deathExplode->respawnAllParticles(glm::vec2(player->getPosition()) + 16.f, glm::vec2(2.0f));
 			SoundEngine2->play2D("audio/hit.wav", false);
 			Reset();
 		}
 
 		if (s->LeftCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
-			deathExplode->respawnAllParticles(glm::vec2(mirrorPlayer->getPosition()), glm::vec2(2.0f));
+			deathExplode->respawnAllParticles(glm::vec2(mirrorPlayer->getPosition()) + 16.f, glm::vec2(2.0f));
 			SoundEngine2->play2D("audio/hit.wav", false);
 			Reset();
 		}
 		if (s->RightCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
-			deathExplode->respawnAllParticles(glm::vec2(mirrorPlayer->getPosition()), glm::vec2(2.0f));
+			deathExplode->respawnAllParticles(glm::vec2(mirrorPlayer->getPosition()) + 16.f, glm::vec2(2.0f));
 			SoundEngine2->play2D("audio/hit.wav", false);
 			Reset();
 		}
 		if (s->UpperCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
-			deathExplode->respawnAllParticles(glm::vec2(mirrorPlayer->getPosition()), glm::vec2(2.0f));
+			deathExplode->respawnAllParticles(glm::vec2(mirrorPlayer->getPosition()) + 16.f, glm::vec2(2.0f));
 			SoundEngine2->play2D("audio/hit.wav", false);
 			Reset();
 		}
 		if (s->BottomCollision(mirrorPlayer->getPosition(), glm::ivec2(32, 32))) {
-			deathExplode->respawnAllParticles(glm::vec2(mirrorPlayer->getPosition()), glm::vec2(2.0f));
+			deathExplode->respawnAllParticles(glm::vec2(mirrorPlayer->getPosition()) + 16.f, glm::vec2(2.0f));
 			SoundEngine2->play2D("audio/hit.wav", false);
 			Reset();
 		}
@@ -707,9 +707,10 @@ void Scene::checkHydraulicPressCollisions()
 	}
 }
 
-void Scene::addLever(glm::vec2 pos)
+void Scene::addLever(glm::vec2 pos, bool mirror)
 {
 	lever = new Lever();
+	lever->setMirror(mirror);
 	lever->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	lever->setTileMap(map);
 	lever->setPosition(glm::vec2(pos.x * map->getTileSize(), pos.y * map->getTileSize()));
@@ -846,7 +847,7 @@ void Scene::addFlag(glm::vec2 position, bool mirror) {
 		flag.loadFromFile("images/Flag.png", TEXTURE_PIXEL_FORMAT_RGBA);
 		flag.setMinFilter(GL_NEAREST);
 		flag.setMagFilter(GL_NEAREST);
-		Sprite* sprite = Sprite::createSprite(glm::vec2(32.f, 36.f), glm::vec2(1.f, 1.f),
+		Sprite* sprite = Sprite::createSprite(glm::vec2(32.f, 64.f), glm::vec2(1.f, 1.f),
 			&flag, &texProgram);
 		sprite->setPosition(glm::vec2(position.x * map->getTileSize(), position.y * map->getTileSize()));
 		decorationList.push_back(sprite);
@@ -855,7 +856,7 @@ void Scene::addFlag(glm::vec2 position, bool mirror) {
 		flagMirror.loadFromFile("images/Flag-mirror.png", TEXTURE_PIXEL_FORMAT_RGBA);
 		flagMirror.setMinFilter(GL_NEAREST);
 		flagMirror.setMagFilter(GL_NEAREST);
-		Sprite* sprite = Sprite::createSprite(glm::vec2(32.f, 36.f), glm::vec2(1.f, 1.f),
+		Sprite* sprite = Sprite::createSprite(glm::vec2(32.f, 64.f), glm::vec2(1.f, 1.f),
 			&flagMirror, &texProgram);
 		sprite->setPosition(glm::vec2(position.x * map->getTileSize(), position.y * map->getTileSize()));
 		decorationList.push_back(sprite);
