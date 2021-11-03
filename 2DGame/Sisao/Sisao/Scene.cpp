@@ -38,6 +38,7 @@ Scene::Scene(CSceneManager* pManager)
 	wallListAux = list<Wall*>();
 	transporterList = list<Transporter*>();
 	spikeList = list<Spike*>();
+	decorationList = list<Sprite*>();
 	lever = NULL;
 }
 
@@ -78,6 +79,10 @@ Scene::~Scene()
 	if (!spikeList.empty()) {
 		for (Spike* sp : spikeList) delete sp;
 		spikeList.clear();
+	}
+	if (!decorationList.empty()) {
+		for (Sprite* sprite : decorationList) delete sprite;
+		decorationList.clear();
 	}
 	if (lever != NULL)
 		delete lever;
@@ -245,6 +250,8 @@ void Scene::Update(DWORD deltaTime)
 		checkSpikeCollisions();
 		checkHydraulicPressCollisions();
 	}
+
+	for (Sprite* s : decorationList) s->update(deltaTime);
 }
 
 void Scene::Draw()
@@ -259,7 +266,7 @@ void Scene::Draw()
 	background->renderTransparent();
 	
 	map->render();
-	
+	for (Sprite* sprite : decorationList) sprite->render();
 	player->render();
 	mirrorPlayer->render();
 	card1->render();
@@ -277,6 +284,7 @@ void Scene::Draw()
 	if (mirrorPlayer->getVelocity().x != 0.f && mirrorPlayer->getVelocity().y == 0.f)
 		Particles2->Draw(projection);
 	deathExplode->Draw(projection);
+	
 }
 
 void Scene::Reset() {
@@ -688,7 +696,178 @@ void Scene::addLever(glm::vec2 pos)
 	lever->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	lever->setTileMap(map);
 	lever->setPosition(glm::vec2(pos.x * map->getTileSize(), pos.y * map->getTileSize()));
+}
+
+void Scene::addPointer(glm::vec2 position, bool mirror) {
+	if (!mirror) {
+		pointer.loadFromFile("images/Pointer1.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		pointer.setMinFilter(GL_NEAREST);
+		pointer.setMagFilter(GL_NEAREST);
+		Sprite* sprite = Sprite::createSprite(glm::vec2(32.f, 32.f), glm::vec2(1.f, 1.f),
+			&pointer, &texProgram);
+		sprite->setPosition(glm::vec2(position.x * map->getTileSize(), position.y * map->getTileSize()));
+		decorationList.push_back(sprite);
+	}
+	else { 
+		pointerMirror.loadFromFile("images/Pointer1-mirror.png", TEXTURE_PIXEL_FORMAT_RGBA); 
+		pointerMirror.setMinFilter(GL_NEAREST);
+		pointerMirror.setMagFilter(GL_NEAREST);
+		Sprite* sprite = Sprite::createSprite(glm::vec2(32.f, 32.f), glm::vec2(1.f, 1.f),
+			&pointerMirror, &texProgram);
+		sprite->setPosition(glm::vec2(position.x * map->getTileSize(), position.y * map->getTileSize()));
+		decorationList.push_back(sprite);
+	}
+}
+
+void Scene::addNum1(glm::vec2 position, bool mirror) {
+	if (!mirror) {
+		num1.loadFromFile("images/1.png", TEXTURE_PIXEL_FORMAT_RGBA); 
+		num1.setMinFilter(GL_NEAREST);
+		num1.setMagFilter(GL_NEAREST);
+		Sprite* sprite = Sprite::createSprite(glm::vec2(32.f, 36.f), glm::vec2(1.f, 1.f),
+			&num1, &texProgram);
+		sprite->setPosition(glm::vec2(position.x * map->getTileSize(), position.y * map->getTileSize()));
+		decorationList.push_back(sprite);
+	}
+	else {
+		num1Mirror.loadFromFile("images/1-mirror.png", TEXTURE_PIXEL_FORMAT_RGBA); 
+		num1Mirror.setMinFilter(GL_NEAREST);
+		num1Mirror.setMagFilter(GL_NEAREST);
+		Sprite* sprite = Sprite::createSprite(glm::vec2(32.f, 36.f), glm::vec2(1.f, 1.f),
+			&num1Mirror, &texProgram);
+		sprite->setPosition(glm::vec2(position.x * map->getTileSize(), position.y * map->getTileSize()));
+		decorationList.push_back(sprite);
+	}
+}
+
+void Scene::addNum2(glm::vec2 position, bool mirror) {
+	if (!mirror) {
+		num2.loadFromFile("images/2.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		num2.setMinFilter(GL_NEAREST);
+		num2.setMagFilter(GL_NEAREST);
+		Sprite* sprite = Sprite::createSprite(glm::vec2(32.f, 36.f), glm::vec2(1.f, 1.f),
+			&num2, &texProgram);
+		sprite->setPosition(glm::vec2(position.x * map->getTileSize(), position.y * map->getTileSize()));
+		decorationList.push_back(sprite);
+	}
+	else {
+		num2Mirror.loadFromFile("images/2-mirror.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		num2Mirror.setMinFilter(GL_NEAREST);
+		num2Mirror.setMagFilter(GL_NEAREST);
+		Sprite* sprite = Sprite::createSprite(glm::vec2(32.f, 36.f), glm::vec2(1.f, 1.f),
+			&num2Mirror, &texProgram);
+		sprite->setPosition(glm::vec2(position.x * map->getTileSize(), position.y * map->getTileSize()));
+		decorationList.push_back(sprite);
+	}
+}
+
+void Scene::addNum3(glm::vec2 position, bool mirror) {
+	if (!mirror) {
+		num3.loadFromFile("images/3.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		num3.setMinFilter(GL_NEAREST);
+		num3.setMagFilter(GL_NEAREST);
+		Sprite* sprite = Sprite::createSprite(glm::vec2(32.f, 36.f), glm::vec2(1.f, 1.f),
+			&num3, &texProgram);
+		sprite->setPosition(glm::vec2(position.x * map->getTileSize(), position.y * map->getTileSize()));
+		decorationList.push_back(sprite);
+	}
+	else {
+		num3Mirror.loadFromFile("images/3-mirror.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		num3Mirror.setMinFilter(GL_NEAREST);
+		num3Mirror.setMagFilter(GL_NEAREST);
+		Sprite* sprite = Sprite::createSprite(glm::vec2(32.f, 36.f), glm::vec2(1.f, 1.f),
+			&num3Mirror, &texProgram);
+		sprite->setPosition(glm::vec2(position.x * map->getTileSize(), position.y * map->getTileSize()));
+		decorationList.push_back(sprite);
+	}
+}
+
+void Scene::addNum4(glm::vec2 position, bool mirror) {
+	if (!mirror) {
+		num4.loadFromFile("images/4.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		num4.setMinFilter(GL_NEAREST);
+		num4.setMagFilter(GL_NEAREST);
+		Sprite* sprite = Sprite::createSprite(glm::vec2(32.f, 36.f), glm::vec2(1.f, 1.f),
+			&num4, &texProgram);
+		sprite->setPosition(glm::vec2(position.x * map->getTileSize(), position.y * map->getTileSize()));
+		decorationList.push_back(sprite);
+	}
+	else {
+		num4Mirror.loadFromFile("images/4-mirror.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		num4Mirror.setMinFilter(GL_NEAREST);
+		num4Mirror.setMagFilter(GL_NEAREST);
+		Sprite* sprite = Sprite::createSprite(glm::vec2(32.f, 36.f), glm::vec2(1.f, 1.f),
+			&num4Mirror, &texProgram);
+		sprite->setPosition(glm::vec2(position.x * map->getTileSize(), position.y * map->getTileSize()));
+		decorationList.push_back(sprite);
+	}
+}
+
+void Scene::addNum5(glm::vec2 position, bool mirror) {
+	if (!mirror) {
+		num5.loadFromFile("images/5.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		num5.setMinFilter(GL_NEAREST);
+		num5.setMagFilter(GL_NEAREST);
+		Sprite* sprite = Sprite::createSprite(glm::vec2(32.f, 36.f), glm::vec2(1.f, 1.f),
+			&num5, &texProgram);
+		sprite->setPosition(glm::vec2(position.x * map->getTileSize(), position.y * map->getTileSize()));
+		decorationList.push_back(sprite);
+	}
+	else {
+		num5Mirror.loadFromFile("images/5-mirror.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		num5Mirror.setMinFilter(GL_NEAREST);
+		num5Mirror.setMagFilter(GL_NEAREST);
+		Sprite* sprite = Sprite::createSprite(glm::vec2(32.f, 36.f), glm::vec2(1.f, 1.f),
+			&num5Mirror, &texProgram);
+		sprite->setPosition(glm::vec2(position.x * map->getTileSize(), position.y * map->getTileSize()));
+		decorationList.push_back(sprite);
+	}
+}
+
+void Scene::addFlag(glm::vec2 position, bool mirror) {
+	if (!mirror) {
+		flag.loadFromFile("images/Flag.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		flag.setMinFilter(GL_NEAREST);
+		flag.setMagFilter(GL_NEAREST);
+		Sprite* sprite = Sprite::createSprite(glm::vec2(32.f, 36.f), glm::vec2(1.f, 1.f),
+			&flag, &texProgram);
+		sprite->setPosition(glm::vec2(position.x * map->getTileSize(), position.y * map->getTileSize()));
+		decorationList.push_back(sprite);
+	}
+	else {
+		flagMirror.loadFromFile("images/Flag-mirror.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		flagMirror.setMinFilter(GL_NEAREST);
+		flagMirror.setMagFilter(GL_NEAREST);
+		Sprite* sprite = Sprite::createSprite(glm::vec2(32.f, 36.f), glm::vec2(1.f, 1.f),
+			&flagMirror, &texProgram);
+		sprite->setPosition(glm::vec2(position.x * map->getTileSize(), position.y * map->getTileSize()));
+		decorationList.push_back(sprite);
+	}
+}
+
+void Scene::addMop(glm::vec2 position, bool mirror) {
+	if (!mirror) { 
+		mop.loadFromFile("images/Mop.png", TEXTURE_PIXEL_FORMAT_RGBA); 
+		mop.setMinFilter(GL_NEAREST);
+		mop.setMagFilter(GL_NEAREST);
+		Sprite* sprite = Sprite::createSprite(glm::vec2(32.f, 36.f), glm::vec2(1.f, 1.f),
+			&mop, &texProgram);
+		sprite->setPosition(glm::vec2(position.x * map->getTileSize(), position.y * map->getTileSize()));
+		decorationList.push_back(sprite);
+	}
+	else { 
+		mopMirror.loadFromFile("images/Mop-mirror.png", TEXTURE_PIXEL_FORMAT_RGBA); 
+		mopMirror.setMinFilter(GL_NEAREST);
+		mopMirror.setMagFilter(GL_NEAREST);
+		Sprite* sprite = Sprite::createSprite(glm::vec2(32.f, 36.f), glm::vec2(1.f, 1.f),
+			&mopMirror, &texProgram);
+		sprite->setPosition(glm::vec2(position.x * map->getTileSize(), position.y * map->getTileSize()));
+		decorationList.push_back(sprite);
+	}
+
 
 }
+
+
 
 

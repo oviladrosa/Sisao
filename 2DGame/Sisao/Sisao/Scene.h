@@ -57,6 +57,14 @@ public:
 	void checkTransporterCollisions();
 	void addSpike(glm::vec2 pos, bool mirror);
 	void checkSpikeCollisions();
+	void addPointer(glm::vec2 position, bool mirror);
+	void addNum1(glm::vec2 position, bool mirror);
+	void addNum2(glm::vec2 position, bool mirror);
+	void addNum3(glm::vec2 position, bool mirror);
+	void addNum4(glm::vec2 position, bool mirror);
+	void addNum5(glm::vec2 position, bool mirror);
+	void addFlag(glm::vec2 position, bool mirror);
+	void addMop(glm::vec2 position, bool mirror);
 	ShaderProgram initializeParticleShader();
 
 private:
@@ -94,6 +102,24 @@ private:
 	ParticleGenerator* deathExplode;
 	bool GodMode;
 	bool removeBarrier;
+	list<Sprite*> decorationList;
+	//Textures for decoration
+	Texture pointer;
+	Texture num1;
+	Texture num2;
+	Texture num3;
+	Texture num4;
+	Texture num5;
+	Texture flag;
+	Texture mop;
+	Texture pointerMirror;
+	Texture num1Mirror;
+	Texture num2Mirror;
+	Texture num3Mirror;
+	Texture num4Mirror;
+	Texture num5Mirror;
+	Texture flagMirror;
+	Texture mopMirror;
 };
 
 
