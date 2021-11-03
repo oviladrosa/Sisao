@@ -119,8 +119,8 @@ void CSceneState::resetState() {
 void CSceneState::initLevel01() {
 	pointerScene1->setLevel("levels/level01.txt");
 	pointerScene1->setNextScene(2);
-	pointerScene1->setcard1Postion(glm::vec2(30.f, 5.f));
-	pointerScene1->setcard2Postion(glm::vec2(30.f, 10.f));
+	pointerScene1->setcard1Postion(glm::vec2(8.f, 5.f));
+	pointerScene1->setcard2Postion(glm::vec2(8.f, 10.f));
 	pointerScene1->setplayerPostion(glm::ivec2(8, 5));
 	pointerScene1->setmirrorplayerPostion(glm::ivec2(8, 10));
 	pointerScene1->init();
@@ -156,10 +156,11 @@ void CSceneState::initLevel01() {
 void CSceneState::initLevel02() {
 	pointerScene2->setLevel("levels/level02.txt");
 	pointerScene2->setNextScene(3);
-	pointerScene2->setcard1Postion(glm::vec2(30.f, 5.f));
-	pointerScene2->setcard2Postion(glm::vec2(22.f, 11.f));
+	pointerScene2->setcard1Postion(glm::vec2(32.f, 5.f));
+	pointerScene2->setcard2Postion(glm::vec2(24.f, 11.f));
 	pointerScene2->setplayerPostion(glm::ivec2(8, 5));
 	pointerScene2->setmirrorplayerPostion(glm::ivec2(8, 15));
+
 	pointerScene2->init();
 
 	
