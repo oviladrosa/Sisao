@@ -187,14 +187,16 @@ void Scene::Update(DWORD deltaTime)
 		float half_point = (player->getPosition()[0] + mirrorPlayer->getPosition()[0]) / 2.f;
 		projection = glm::ortho((half_point)-SCREEN_WIDTH / 4.f, (half_point)+SCREEN_WIDTH / 4.f, float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
 	}
-	lever->update(deltaTime);
-	if (lever->isPlayerTouching(glm::vec2(player->getPosition()))
-		|| lever->isPlayerTouching(glm::vec2(mirrorPlayer->getPosition()))) lever->setEnabled(true);
-	if (lever->isEnabled() || removeBarrier) wallList.clear();
-	else
-	{
-		for (Wall* wall : wallList)
-			wall->update(deltaTime);
+	if (lever != NULL) {
+		lever->update(deltaTime);
+		if (lever->isPlayerTouching(glm::vec2(player->getPosition()))
+			|| lever->isPlayerTouching(glm::vec2(mirrorPlayer->getPosition()))) lever->setEnabled(true);
+		if (lever->isEnabled() || removeBarrier) wallList.clear();
+		else
+		{
+			for (Wall* wall : wallList)
+				wall->update(deltaTime);
+		}
 	}
 	for (Box* box : boxList)
 		box->update(deltaTime);
@@ -267,7 +269,7 @@ void Scene::Draw()
 	for (Transporter* t : transporterList) t->render();
 	for (Spike* s : spikeList) s->render();
 	for (HydraulicPress* hammer : hammerList) hammer->render();
-	lever->render();
+	if (lever != NULL) lever->render();
 	radiopool->renderTransparent();
 
 	if(player->getVelocity().x != 0.f && player->getVelocity().y == 0.f) 
@@ -278,7 +280,7 @@ void Scene::Draw()
 }
 
 void Scene::Reset() {
-	if (lever->isEnabled() || removeBarrier)
+	if (lever != NULL && (lever->isEnabled() || removeBarrier))
 	{
 		lever->setEnabled(false);
 		for (Wall* wall : wallListAux)
