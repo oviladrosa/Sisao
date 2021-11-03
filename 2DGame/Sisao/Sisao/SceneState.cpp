@@ -9,6 +9,7 @@
 #include "StateManager.h"
 #include <iostream>
 #include <irrKlang.h>
+#include "CreditsState.h"
 using namespace irrklang;
 
 
@@ -64,6 +65,10 @@ void CSceneState::Update(DWORD deltaTime) {
 			case 5:
 				m_pSceneManager->ChangeScene(pointerScene5);
 				break;
+			case 6:
+				CSceneState::GetInstance(m_pStateManager)->resetState();
+				m_pSceneManager->GetActiveScene()->LeaveScene();
+				ChangeState(CCreditsState::GetInstance(m_pStateManager));
 			default:
 				break;
 		}
@@ -71,22 +76,27 @@ void CSceneState::Update(DWORD deltaTime) {
 	if (Game::instance().getKey(49)) {
 		pointerScene1->Reset();
 		m_pSceneManager->ChangeScene(pointerScene1);
+		Game::instance().keyReleased(49);
 	}
 	if (Game::instance().getKey(50)) {
 		pointerScene2->Reset();
 		m_pSceneManager->ChangeScene(pointerScene2);
+		Game::instance().keyReleased(50);
 	}
 	if (Game::instance().getKey(51)) {
 		pointerScene3->Reset();
 		m_pSceneManager->ChangeScene(pointerScene3);
+		Game::instance().keyReleased(51);
 	}
 	if (Game::instance().getKey(52)) {
 		pointerScene4->Reset();
 		m_pSceneManager->ChangeScene(pointerScene4);
+		Game::instance().keyReleased(52);
 	}
 	if (Game::instance().getKey(53)) {
 		pointerScene5->Reset();
 		m_pSceneManager->ChangeScene(pointerScene5);
+		Game::instance().keyReleased(53);
 	}
 	
 }
@@ -139,6 +149,7 @@ void CSceneState::initLevel02() {
 	pointerScene2->setplayerPostion(glm::ivec2(8, 5));
 	pointerScene2->setmirrorplayerPostion(glm::ivec2(8, 15));
 	pointerScene2->init();
+	
 }
 
 void CSceneState::initLevel03() {
@@ -149,6 +160,7 @@ void CSceneState::initLevel03() {
 	pointerScene3->setplayerPostion(glm::ivec2(14, 3));
 	pointerScene3->setmirrorplayerPostion(glm::ivec2(8, 15));
 	pointerScene3->init();
+	pointerScene3->addLever(glm::vec2(12, 6));
 }
 
 void CSceneState::initLevel04() {
@@ -159,14 +171,16 @@ void CSceneState::initLevel04() {
 	pointerScene4->setplayerPostion(glm::ivec2(8, 5));
 	pointerScene4->setmirrorplayerPostion(glm::ivec2(8, 15));
 	pointerScene4->init();
+	pointerScene4->addLever(glm::vec2(12, 6));
 }
 
 void CSceneState::initLevel05() {
 	pointerScene5->setLevel("levels/level02.txt");
-	pointerScene5->setNextScene(1);
+	pointerScene5->setNextScene(6);
 	pointerScene5->setcard1Postion(glm::vec2(30.f, 5.f));
-	pointerScene5->setcard2Postion(glm::vec2(30.f, 10.f));
+	pointerScene5->setcard2Postion(glm::vec2(22.f, 11.f));
 	pointerScene5->setplayerPostion(glm::ivec2(8, 5));
 	pointerScene5->setmirrorplayerPostion(glm::ivec2(8, 15));
 	pointerScene5->init();
+	pointerScene5->addLever(glm::vec2(12, 6));
 }
