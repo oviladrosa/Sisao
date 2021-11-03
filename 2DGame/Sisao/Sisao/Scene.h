@@ -120,6 +120,7 @@ private:
 	Texture num5Mirror;
 	Texture flagMirror;
 	Texture mopMirror;
+	bool startHammerSound;
 };
 
 

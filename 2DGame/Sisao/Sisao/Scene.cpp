@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <stdlib.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h" 
 #include "Game.h"
@@ -138,6 +139,7 @@ void Scene::init()
 	currentTime = 0.0f;
 	SoundEngine2->play2D("audio/gameloop.mp3", true);
 	finished = false;
+	startHammerSound = true;
 
 
 	ShaderProgram particleSystem = initializeParticleShader();
@@ -182,20 +184,28 @@ void Scene::Update(DWORD deltaTime)
 	}
 	card1->update(deltaTime);
 	card2->update(deltaTime);
+	glm::vec4 camActual;
 	if (player->getPosition()[0] < SCREEN_WIDTH / 4.f || mirrorPlayer->getPosition()[0] < SCREEN_WIDTH / 4.f) {
 		projection = glm::ortho(0.f, float(SCREEN_WIDTH / 2.f), float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
+		camActual = glm::vec4(0.f, float(SCREEN_WIDTH / 2.f), float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
 	}
 	else if (player->getPosition()[0] > (SCREEN_WIDTH - (SCREEN_WIDTH / 4.f)) || mirrorPlayer->getPosition()[0] > (SCREEN_WIDTH - (SCREEN_WIDTH / 4.f))) {
 		projection = glm::ortho(float(SCREEN_WIDTH / 2.f), float(SCREEN_WIDTH), float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
+		camActual = glm::vec4(float(SCREEN_WIDTH / 2.f), float(SCREEN_WIDTH), float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
 	}
 	else {
 		float half_point = (player->getPosition()[0] + mirrorPlayer->getPosition()[0]) / 2.f;
 		projection = glm::ortho((half_point)-SCREEN_WIDTH / 4.f, (half_point)+SCREEN_WIDTH / 4.f, float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
+		camActual = glm::vec4((half_point)-SCREEN_WIDTH / 4.f, (half_point)+SCREEN_WIDTH / 4.f, float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
 	}
 	if (lever != NULL) {
 		lever->update(deltaTime);
 		if (lever->isPlayerTouching(glm::vec2(player->getPosition()))
-			|| lever->isPlayerTouching(glm::vec2(mirrorPlayer->getPosition()))) lever->setEnabled(true);
+			|| lever->isPlayerTouching(glm::vec2(mirrorPlayer->getPosition()))) 
+		{
+			SoundEngine2->play2D("audio/lever.wav", false);
+			lever->setEnabled(true);
+		}
 		if (lever->isEnabled() || removeBarrier) wallList.clear();
 		else
 		{
@@ -206,18 +216,25 @@ void Scene::Update(DWORD deltaTime)
 	for (Box* box : boxList)
 		box->update(deltaTime);
 
+	bool detectedImpact = false;
 	for (HydraulicPress* hammer : hammerList)
-		hammer->update(deltaTime);
+	{
+		if (startHammerSound && hammer->getAnimation() == 1) {
+			//SoundEngine2->play2D("audio/hammer-complete-9.wav", true);
+			startHammerSound = false;
+		}
+		if (hammer->getAnimation() == 0 && !detectedImpact) {
+			detectedImpact = true;
+			for (float f = 0.0f; f <= 2.0f; f+=0.1f) {
+				float left = float(rand() % 5 + camActual.x - 5.f);
+				float right = float(rand() % 5 + camActual.y - 5.f);
+				float bottom = float(rand() % 5 + camActual.z - 5.f);
+				float top = float(rand() % 5 + camActual.w - 5.f);
 
-	if (player->getPosition()[0] < SCREEN_WIDTH / 4.f || mirrorPlayer->getPosition()[0] < SCREEN_WIDTH / 4.f) {
-		projection = glm::ortho(0.f, float(SCREEN_WIDTH / 2.f), float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
-	}
-	else if (player->getPosition()[0] > (SCREEN_WIDTH - (SCREEN_WIDTH / 4.f)) || mirrorPlayer->getPosition()[0] > (SCREEN_WIDTH - (SCREEN_WIDTH / 4.f))) {
-		projection = glm::ortho(float(SCREEN_WIDTH / 2.f), float(SCREEN_WIDTH), float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
-	}
-	else {
-		float half_point = (player->getPosition()[0] + mirrorPlayer->getPosition()[0]) / 2.f;
-		projection = glm::ortho((half_point)-SCREEN_WIDTH / 4.f, (half_point)+SCREEN_WIDTH / 4.f, float(SCREEN_HEIGHT - 1) / 2.f, 0.f);
+				projection = glm::ortho(camActual.x, right, bottom, camActual.w);
+			}
+		}
+		hammer->update(deltaTime);
 	}
 /*	if (Game::instance().getKey(27)) {
 		ChangeState(CMenuState::GetInstance(m_pStateManager));
