@@ -200,7 +200,7 @@ void CSceneState::initLevel04() {
 	pointerScene4->setmirrorplayerPostion(glm::ivec2(1, 15));
 
 	pointerScene4->init();
-	pointerScene4->addLever(glm::vec2(25, 4));
+	pointerScene4->addLever(glm::vec2(25, 4), false);
 	pointerScene4->addSpike(glm::vec2(10, 13), true);
 	pointerScene4->addHammer(glm::vec2(14, 3), false);
 	pointerScene4->addHammer(glm::vec2(13, 9), true);
