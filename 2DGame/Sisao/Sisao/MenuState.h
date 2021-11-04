@@ -17,6 +17,7 @@ public:
 	void OnKeyDown(WPARAM wKey);
 	void Draw();
 	void EnterState();
+	void LeaveState();
 	void Update(DWORD deltaTime);
 
 	static CMenuState* GetInstance(CStateManager* pManager);

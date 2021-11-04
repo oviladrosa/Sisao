@@ -98,6 +98,12 @@ void CCreditsState::Draw()
 void CCreditsState::EnterState()
 {
 	counter = 0.f;
+	SoundEngine4->play2D("audio/Credits.mp3", true);
+}
+
+void CCreditsState::LeaveState()
+{
+	SoundEngine4->stopAllSounds();
 }
 
 void CCreditsState::SelectionUp()

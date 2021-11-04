@@ -15,6 +15,7 @@ public:
 	void OnKeyDown(WPARAM wKey);
 	void Draw();
 	void EnterState();
+	void LeaveState();
 	void Update(DWORD deltaTime);
 
 	static CCreditsState* GetInstance(CStateManager* pManager);

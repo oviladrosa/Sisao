@@ -229,6 +229,13 @@ void CMenuState::Draw()
 
 void CMenuState::EnterState()
 {
+	SoundEngine->play2D("audio/Menu.mp3", true);
+	Game::instance().keyReleased(13);
+}
+
+void CMenuState::LeaveState()
+{
+	SoundEngine->stopAllSounds();
 	Game::instance().keyReleased(13);
 }
 
