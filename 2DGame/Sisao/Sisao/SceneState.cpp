@@ -160,10 +160,7 @@ void CSceneState::initLevel02() {
 	pointerScene2->setcard2Postion(glm::vec2(24.f, 11.f));
 	pointerScene2->setplayerPostion(glm::ivec2(8, 5));
 	pointerScene2->setmirrorplayerPostion(glm::ivec2(8, 15));
-
 	pointerScene2->init();
-
-	
 }
 
 void CSceneState::initLevel03() {
@@ -203,12 +200,32 @@ void CSceneState::initLevel04() {
 }
 
 void CSceneState::initLevel05() {
-	pointerScene5->setLevel("levels/level02.txt");
+	pointerScene5->setLevel("levels/level05.txt");
 	pointerScene5->setNextScene(6);
 	pointerScene5->setcard1Postion(glm::vec2(30.f, 5.f));
-	pointerScene5->setcard2Postion(glm::vec2(22.f, 11.f));
-	pointerScene5->setplayerPostion(glm::ivec2(8, 5));
-	pointerScene5->setmirrorplayerPostion(glm::ivec2(8, 15));
+	pointerScene5->setcard2Postion(glm::vec2(27.f, 10.f));
+	pointerScene5->setplayerPostion(glm::ivec2(1, 2));
+	pointerScene5->setmirrorplayerPostion(glm::ivec2(1, 15));
 	pointerScene5->init();
-	
+	pointerScene5->addTransporter(glm::vec2(4, 6), true);
+	pointerScene5->addTransporter(glm::vec2(7, 6), true);
+	pointerScene5->addTransporter(glm::vec2(14, 10), false);
+	pointerScene5->addHammer(glm::vec2(16, 0), false);
+	pointerScene5->addWall(glm::vec2(15, 0));
+	pointerScene5->addWall(glm::vec2(15, 1));
+	pointerScene5->addSpike(glm::vec2(8, 13), false);
+	pointerScene5->addSpike(glm::vec2(9, 13), false);
+	pointerScene5->addSpike(glm::vec2(10, 13), false);
+	pointerScene5->addSpike(glm::vec2(11, 13), false);
+	pointerScene5->addSpike(glm::vec2(12, 13), false);
+	pointerScene5->addSpike(glm::vec2(8, 9), true);
+	pointerScene5->addSpike(glm::vec2(9, 9), true);
+	pointerScene5->addSpike(glm::vec2(10, 9), true);
+	pointerScene5->addSpike(glm::vec2(11, 9), true);
+	pointerScene5->addSpike(glm::vec2(12, 9), true);
+	pointerScene5->addLever(glm::vec2(7, 11), true);
+	pointerScene5->addNum5(glm::vec2(2.f, 2.f), false);
+	pointerScene5->addNum5(glm::vec2(2.f, 12.f), true);
+	pointerScene5->addBox(glm::vec2(23, 5), true);
+	pointerScene5->addSpike(glm::vec2(21, 6), false);
 }
