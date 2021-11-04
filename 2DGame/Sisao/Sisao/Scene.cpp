@@ -220,10 +220,11 @@ void Scene::Update(DWORD deltaTime)
 	bool detectedImpact = false;
 	for (HydraulicPress* hammer : hammerList)
 	{
-		if (startHammerSound && hammer->getAnimation() == 1) {
-			//SoundEngine2->play2D("audio/hammer-complete-9.wav", true);
+		if (startHammerSound && hammer->getAnimation() == 0) {
+			SoundEngine2->play2D("audio/hammer-hit.wav", false);
 			startHammerSound = false;
 		}
+		if (hammer->getAnimation() == 1) startHammerSound = true;
 		if (hammer->getAnimation() == 0 && !detectedImpact) {
 			detectedImpact = true;
 			for (float f = 0.0f; f <= 2.0f; f+=0.1f) {
@@ -358,6 +359,7 @@ void Scene::initShaders()
 }
 
 void Scene::EnterScene() {
+	startHammerSound = true;
 	GodMode = false;
 	SoundEngine2->play2D("audio/gameloop.mp3", true);
 }
