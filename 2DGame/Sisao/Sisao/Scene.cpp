@@ -164,6 +164,7 @@ void Scene::init()
 	);
 	GodMode = false;
 	removeBarrier = false;
+	
 }
 
 void Scene::Update(DWORD deltaTime)
@@ -200,8 +201,8 @@ void Scene::Update(DWORD deltaTime)
 	}
 	if (lever != NULL) {
 		lever->update(deltaTime);
-		if (lever->isPlayerTouching(glm::vec2(player->getPosition()))
-			|| lever->isPlayerTouching(glm::vec2(mirrorPlayer->getPosition()))) 
+		if ((lever->isPlayerTouching(glm::vec2(player->getPosition()))
+			|| lever->isPlayerTouching(glm::vec2(mirrorPlayer->getPosition()))) && !lever->isEnabled()) 
 		{
 			SoundEngine2->play2D("audio/lever.wav", false);
 			lever->setEnabled(true);
