@@ -152,6 +152,7 @@ void CSceneState::initLevel02() {
 	pointerScene2->init();
 
 	pointerScene2->addBox(glm::vec2(21, 9), true);
+
 }
 
 void CSceneState::initLevel03() {
