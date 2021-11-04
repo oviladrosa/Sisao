@@ -25,9 +25,11 @@ public:
 
 	bool isEnabled();
 	void setEnabled(bool enable);
+	void setMirror(bool m);
 
 private:
 	bool enabled;
+	bool mirror;
 };
 
 #endif	//_LEVER_H
